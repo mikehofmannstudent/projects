@@ -6,19 +6,22 @@ body {
 }
 
 h1 {
-    font-size: 32px;
-    font-weight: 800;
+    margin: 10px;
+    font-weight: 700;
 }
 
-span {
-    opacity: 0;
+h2 {
+    font-size: 28px;
 }
 
-.input {
-    font-size: 24px;
+
+a {
+    text-decoration: none;
+    font-size: 20px;
 }
 
 .main {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -26,9 +29,13 @@ span {
     height: 100vh;
 }
 
-#calc, #result {
-    font-size: 24px;
-    font-weight: 700;
-    margin-top: 20px;
-    margin-bottom: 0px;
+.title {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.content {
+    position: absolute;
+    top: 20%;
 }
