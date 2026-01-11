@@ -177,23 +177,23 @@ def calculate(token):
             skip = False
             continue
         elif token[i] == '^':
-            placeholder = squared.pop(-1)
+            placeholder = squared.pop()
             squared.append(placeholder**token[i+1])
             skip = True
         else:
             squared.append(token[i])
-            
+
     for i in range(len(squared)):
         if skip:
             skip = False
             continue
         elif squared[i] == '*':
-            placeholder = multiplied.pop(-1)
+            placeholder = multiplied.pop()
             multiplied.append(placeholder * squared[i+1])
             skip = True
         elif squared[i] == '/':
             try:
-                placeholder = multiplied.pop(-1)
+                placeholder = multiplied.pop()
                 multiplied.append(placeholder / squared[i+1])
                 skip = True
             except ZeroDivisionError:
