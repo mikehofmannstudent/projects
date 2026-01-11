@@ -1,0 +1,34 @@
+body {
+    background-color: #F5F2F2;
+    font-family: Nunito, Arial;
+    color: #2B2A2A;
+    margin: 0;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+span {
+    opacity: 0;
+}
+
+.input {
+    font-size: 24px;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#calc, #result {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 0px;
+}
