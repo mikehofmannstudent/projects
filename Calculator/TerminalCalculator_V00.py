@@ -88,7 +88,7 @@ while True:
     print_separator()
     print_result(result)
 
-    again = input("\nWould you like to use the calculator again? (Y/n)")
+    again = input("\nWould you like to use the calculator again? (Y/n): ")
     if again.lower() == 'n':
         print("\nGoodbye!")
         break
