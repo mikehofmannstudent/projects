@@ -246,11 +246,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const tokens = numerify(checkValid(tokenize(inputElement.value)));
                 const result = fullCalculation(tokens);
 
+                addHistory(textOutput(tokenize(inputElement.value)), result);
+                
                 calcElement.textContent = textOutput(tokenize(inputElement.value));
                 resultElement.textContent = "Result: " + result
                 inputElement.value = "";
-
-                addHistory(textOutput(tokens), result);
             }
         } catch (error) {   
             calcElement.textContent = textOutput(tokenize(inputElement.value));
