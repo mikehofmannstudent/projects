@@ -102,7 +102,16 @@ function numerify (tokens) {
         } else if (t === "-" && lastWasOperator) {
             currentNumber = "-";
             lastWasOperator = false;
-        } else if (["+", "-", "*", "/", "^"].includes(t)) {
+        } else if (t === "*") {
+            if (tokens[i-1] === "*") {
+                numTokens.pop();
+                numTokens.push("^");
+            } else if (currentNumber !== "") {
+                numTokens.push(parseFloat(currentNumber));
+                numTokens.push(t);
+                currentNumber = "";
+            }
+        } else if (["+", "-", "/", "^"].includes(t)) {
             if (currentNumber !== "") {
                 numTokens.push(parseFloat(currentNumber));
                 currentNumber = "";
@@ -264,11 +273,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const histBoxElement = document.getElementById("history");
 
     histButtonElement.addEventListener("click", () => {
-        if (histBoxElement.style.display === "none") {
-            histBoxElement.style.display = "block";
-        } else {
-            histBoxElement.style.display = "none";
-        }
+        histBoxElement.classList.toggle("show");
+        histButtonElement.classList.toggle("active");
+
+        // if (histBoxElement.style.display === "none") {
+        //     histBoxElement.style.display = "block";
+        // } else {
+        //     histBoxElement.style.display = "none";
+        // }
     });
 
     // History List

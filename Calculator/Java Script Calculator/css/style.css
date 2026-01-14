@@ -53,6 +53,11 @@ span {
     right: 0;
     margin: 100px;
     margin-right: 150px;
+    display: none;
+}
+
+.history.show {
+    display: block;
 }
 
 #calc, #result {
@@ -75,7 +80,7 @@ span {
     padding-right: 10px;
 }
 
-#toggleHistory:active {
+#toggleHistory.active {
     background-color: #2B2A2A;
     color: #F5F2F2;
 }
