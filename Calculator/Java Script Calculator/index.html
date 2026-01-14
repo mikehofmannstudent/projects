@@ -9,11 +9,16 @@
 </head>
 <body>
     <div class="main">
+        <button id="toggleHistory">History</button>
         <h1>Welcome to the Calculator!</h1>
         <label class="input" for="input">Enter Calculation:</label>
         <input type="text" class="input" id="input" name="input">
         <p id="calc"><span>.</span></p>
         <p id="result"><span>.</span></p>
+    </div>
+    <div class="history" id="history" style="display: none;">
+        <h1>History</h1>
+        <ul id="histList"></ul>
     </div>
 </body>
 </html>

@@ -45,11 +45,11 @@ function checkValid (tokens) {
     for (let i = 0; i < tokens.length; i++) {
         if (lastTokenType === "") {
             if (["+", "*", "/"].includes(tokens[i])) {
-                throw Error("❌ Invalid Opertator");
+                throw Error("❌ Invalid Operator");
             } else if (checkFloat(tokens[i]) || "-(".includes(tokens[i])) {
                 lastTokenType = tokens[i];
             } else {
-                throw Error("❌ Invalid Charater");
+                throw Error("❌ Invalid Character");
             }
         } else if (checkFloat(lastTokenType)) {
             if (checkFloat(tokens[i]) || tokens[i] === ".") {
@@ -63,7 +63,7 @@ function checkValid (tokens) {
             }
         } else if (["+", "-", "*", "/"].includes(lastTokenType)) {
             if (["+", "/"].includes(tokens[i])) {
-                throw Error("❌ Invalid Opertator");
+                throw Error("❌ Invalid Operator");
             } else if (lastTokenType === "-" && tokens[i] === "-") {
                 lastTokenType = "+";
             } else if (lastTokenType === "*" && tokens[i] === "*") {
@@ -71,8 +71,10 @@ function checkValid (tokens) {
             } else if (checkFloat(tokens[i]) || tokens[i] === "(") {
                 lastTokenType = tokens[i];
             } else {
-                throw Error("❌ Invalid Charater");
+                throw Error("❌ Invalid Character");
             }
+        } else if (tokens[i] === "(" && tokens[i+1] === ")") {
+            throw Error("❌ Empty Parentheses");
         }
     } 
 
@@ -88,53 +90,49 @@ function checkValid (tokens) {
 //---------------------
 
 function numerify (tokens) {
-    let lastChar = "";
+    let currentNumber = "";
     let numTokens = [];
+    let lastWasOperator = true;
     for (let i = 0; i < tokens.length; i++) {
-        if (checkFloat(tokens[i]) || tokens[i] === ".") {
-            if (lastChar === "*") {
-                numTokens.push(lastChar);
-                lastChar = tokens[i];
-            } else if (tokens[i-1] === ")") {
-                numTokens.push("*");
-                lastChar = tokens[i];
-            } else {
-                lastChar += tokens[i];
+        const t = tokens[i];
+
+        if (checkFloat(t) || t === ".") {
+            currentNumber += t;
+            lastWasOperator = false;
+        } else if (t === "-" && lastWasOperator) {
+            currentNumber = "-";
+            lastWasOperator = false;
+        } else if (["+", "-", "*", "/", "^"].includes(t)) {
+            if (currentNumber !== "") {
+                numTokens.push(parseFloat(currentNumber));
+                currentNumber = "";
             }
-        } else if (["+", "/", ")"].includes(tokens[i])) {
-            if (checkFloat(lastChar)) {
-                numTokens.push(parseFloat(lastChar));
-                lastChar = "";
+            numTokens.push(t);
+            lastWasOperator = true;
+        } else if (t === "(") {
+            if (currentNumber !== "") {
+                numTokens.push(parseFloat(currentNumber), "*");
+                currentNumber = "";
             }
-            numTokens.push(tokens[i]);
-        } else if (["-", "*"].includes(tokens[i])) {
-            if (checkFloat(lastChar)) {
-                numTokens.push(parseFloat(lastChar));
-                lastChar = tokens[i];
-            } else if (lastChar === "-") {
-                numTokens.push("+");
-                lastChar = "";
-            } else if (lastChar === "*") {
-                numTokens.push("^");
-                lastChar = "";
+            numTokens.push(t);
+            lastWasOperator = true;
+        } else if (t === ")") {
+            if (currentNumber !== "") {
+                numTokens.push(parseFloat(currentNumber));
+                currentNumber = "";
             }
-        } else if (tokens[i] === "(") {
-            if (checkFloat(lastChar)) {
-                numTokens.push(parseFloat(lastChar), "*", tokens[i]);
-                lastChar = "";
-            } else if (tokens[i-1] === ")") {
-                numTokens.push("*");
-                numTokens.push(tokens[i]);
-            } else {
-                numTokens.push(tokens[i]);
-            }
+            numTokens.push(t);
+            lastWasOperator = false;
+        } else {
+            throw Error("❌ Invalid character: " + t);
         }
+
     }
 
-    if (checkFloat(lastChar)) {
-        numTokens.push(parseFloat(lastChar));
+    if (currentNumber !== "") {
+        numTokens.push(parseFloat(currentNumber));
     }
-
+    
     return numTokens;
 }
 
@@ -226,9 +224,9 @@ function fullCalculation (tokens) {
 function textOutput (tokens) {
     let output = "";
     tokens.forEach(char => {
-        output += char + " ";
+        output += char;
     });
-    return output.slice(0, -1);
+    return output;
 }
 
 //---------------------
@@ -236,27 +234,73 @@ function textOutput (tokens) {
 //---------------------
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Calculator
     const inputElement = document.getElementById("input");
     const calcElement = document.getElementById("calc");
     const resultElement = document.getElementById("result");
+
     let currentTokens = ""
     inputElement.addEventListener("keydown", (event) => {
         try {
             if (event.key === "Enter") {
-                let tokens = tokenize(inputElement.value);
-                currentTokens = textOutput(tokens);
-                tokens = checkValid(tokens);
-                tokens = numerify(tokens);
+                const tokens = numerify(checkValid(tokenize(inputElement.value)));
+                const result = fullCalculation(tokens);
 
+                calcElement.textContent = textOutput(tokenize(inputElement.value));
+                resultElement.textContent = "Result: " + result
                 inputElement.value = "";
-                calcElement.textContent = textOutput(tokens);
-                resultElement.textContent = "Result: " + fullCalculation(tokens);
+
+                addHistory(textOutput(tokens), result);
             }
-        } catch (error) {
-            inputElement.value = "";
-            calcElement.textContent = currentTokens;
+        } catch (error) {   
+            calcElement.textContent = textOutput(tokenize(inputElement.value));
             resultElement.textContent = error;
+            inputElement.value = "";
         }
     });
-});
+    
+    // Toggle History
+    const histButtonElement = document.getElementById("toggleHistory");
+    const histBoxElement = document.getElementById("history");
 
+    histButtonElement.addEventListener("click", () => {
+        if (histBoxElement.style.display === "none") {
+            histBoxElement.style.display = "block";
+        } else {
+            histBoxElement.style.display = "none";
+        }
+    });
+
+    // History List
+    const historyElement = document.getElementById("histList");
+    
+    // Load History from Storage
+    let historyList = JSON.parse(sessionStorage.getItem("historyList")) || [];
+
+    function renderHistory () {
+        historyElement.innerHTML = "";
+
+        historyList.forEach((history, index) => {
+            const line = document.createElement("div");
+            line.textContent = history.expression + " = " + history.result;
+            historyElement.appendChild(line);
+        });
+    }
+
+    // Save History To localStorage
+    function saveHistory() {
+        sessionStorage.setItem("historyList", JSON.stringify(historyList));
+    }
+    
+    // Add New History
+    function addHistory(expression, result) {
+        if (!expression) return;
+
+        historyList.unshift({ expression, result });
+        saveHistory();
+        renderHistory();
+    }
+    
+    // Initial render
+    renderHistory();
+});
