@@ -275,12 +275,6 @@ document.addEventListener("DOMContentLoaded", () => {
     histButtonElement.addEventListener("click", () => {
         histBoxElement.classList.toggle("show");
         histButtonElement.classList.toggle("active");
-
-        // if (histBoxElement.style.display === "none") {
-        //     histBoxElement.style.display = "block";
-        // } else {
-        //     histBoxElement.style.display = "none";
-        // }
     });
 
     // History List

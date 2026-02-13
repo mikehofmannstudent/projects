@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7-Day Python Creative Challenge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 8px;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #4ade80;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .day-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #cbd5e1;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .day-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .day-card.completed {
+            border-left-color: #4ade80;
+            background: #f0fdf4;
+        }
+        
+        .day-card.active {
+            border-left-color: #667eea;
+            background: #eef2ff;
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .day-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1e293b;
+        }
+        
+        .day-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        
+        .day-card.completed .day-badge {
+            background: #4ade80;
+        }
+        
+        .day-description {
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .challenge-box {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .challenge-title {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .bonus {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        
+        .bonus-title {
+            color: #92400e;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        .checkbox-container input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .checkbox-container label {
+            cursor: pointer;
+            color: #475569;
+            font-weight: 500;
+        }
+        
+        .tips {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        
+        .tips-title {
+            color: #1e40af;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .tips ul {
+            margin-left: 20px;
+            color: #1e40af;
+        }
+        
+        .tips li {
+            margin: 5px 0;
+        }
+        
+        code {
+            background: #1e293b;
+            color: #4ade80;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            margin-top: 5px;
+        }
+        
+        .reset-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 7-Day Python Creative Challenge</h1>
+            <p>From Calculator to Creative Coder</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="completedDays">0</div>
+                    <div class="stat-label">Days Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="percentComplete">0%</div>
+                    <div class="stat-label">Progress</div>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="1">
+                <div class="day-header">
+                    <div class="day-title">Day 1: Mad Libs Generator</div>
+                    <div class="day-badge">Strings & Input</div>
+                </div>
+                <div class="day-description">
+                    Build a fun Mad Libs game that takes user inputs and creates silly stories. You'll learn about string formatting and user interaction beyond simple calculations.
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Create a program that asks for different types of words (noun, verb, adjective, etc.) and inserts them into a pre-written story template. Print out the hilarious result!
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li>f-strings: <code>f"Hello {name}!"</code></li>
+                        <li>Multiple <code>input()</code> calls</li>
+                        <li>String concatenation</li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Add multiple story templates and let the user choose which one they want!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day1-check">
+                    <label for="day1-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="2">
+                <div class="day-header">
+                    <div class="day-title">Day 2: Number Guessing Game</div>
+                    <div class="day-badge">Loops & Logic</div>
+                </div>
+                <div class="day-description">
+                    Create an interactive game where the computer picks a random number and you have to guess it. This introduces loops and conditional logic in a fun way!
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Use <code>import random</code> to generate a number between 1-100. Give the user hints ("too high" or "too low") and count how many guesses they take.
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li><code>import random</code> and <code>random.randint()</code></li>
+                        <li><code>while</code> loops</li>
+                        <li><code>if/elif/else</code> statements</li>
+                        <li>Comparison operators</li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Add difficulty levels (Easy: 1-50, Hard: 1-200) and limit the number of guesses!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day2-check">
+                    <label for="day2-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="3">
+                <div class="day-header">
+                    <div class="day-title">Day 3: Password Generator</div>
+                    <div class="day-badge">Lists & Functions</div>
+                </div>
+                <div class="day-description">
+                    Build a tool that creates secure random passwords. This is your first step into using lists and writing reusable functions!
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Create a function that generates a random password with letters, numbers, and symbols. Let users specify how long they want it to be.
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li>Defining functions: <code>def function_name():</code></li>
+                        <li>Lists: <code>characters = ['a', 'b', 'c']</code></li>
+                        <li><code>random.choice()</code> to pick random items</li>
+                        <li>String method: <code>.join()</code></li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Add options to exclude certain characters or ensure at least one number and one symbol!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day3-check">
+                    <label for="day3-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="4">
+                <div class="day-header">
+                    <div class="day-title">Day 4: Rock Paper Scissors</div>
+                    <div class="day-badge">Game Logic</div>
+                </div>
+                <div class="day-description">
+                    Create the classic game where you play against the computer. This teaches you about game logic and handling multiple conditions.
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Build a game where the user picks rock, paper, or scissors, the computer picks randomly, and the program determines the winner. Keep score!
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li>Combining everything from previous days</li>
+                        <li>Complex conditional logic</li>
+                        <li>Score tracking with variables</li>
+                        <li>Input validation (handling bad input)</li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Add a "best of 5" mode and show game statistics at the end!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day4-check">
+                    <label for="day4-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="5">
+                <div class="day-header">
+                    <div class="day-title">Day 5: To-Do List Manager</div>
+                    <div class="day-badge">Data Management</div>
+                </div>
+                <div class="day-description">
+                    Create a simple app that lets you add, view, and remove tasks. This introduces working with persistent data structures.
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Build a menu-driven program where users can: 1) Add tasks, 2) View all tasks, 3) Mark tasks as complete, 4) Delete tasks, 5) Exit.
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li>Lists as data storage</li>
+                        <li><code>.append()</code>, <code>.remove()</code> methods</li>
+                        <li>Menu-driven programs with <code>while</code> loops</li>
+                        <li>List indexing and iteration</li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Add task priorities or due dates, and sort tasks by priority!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day5-check">
+                    <label for="day5-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="6">
+                <div class="day-header">
+                    <div class="day-title">Day 6: ASCII Art Generator</div>
+                    <div class="day-badge">Creative Output</div>
+                </div>
+                <div class="day-description">
+                    Generate patterns, shapes, or text art using code. This pushes your creativity and teaches nested loops!
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Create a program that generates ASCII art patterns like pyramids, diamonds, or creates large text from small characters. Let users customize the size and character used.
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li>Nested <code>for</code> loops</li>
+                        <li>String multiplication: <code>"*" * 5</code></li>
+                        <li>Pattern recognition and math in code</li>
+                        <li>Formatting output with spaces</li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Create multiple pattern options (triangle, diamond, square) and let users choose!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day6-check">
+                    <label for="day6-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <div class="day-card" data-day="7">
+                <div class="day-header">
+                    <div class="day-title">Day 7: Quiz Game Builder</div>
+                    <div class="day-badge">Final Project</div>
+                </div>
+                <div class="day-description">
+                    Combine everything you've learned to build a complete quiz game with questions, scoring, and feedback. This is your masterpiece!
+                </div>
+                <div class="challenge-box">
+                    <div class="challenge-title">Your Mission:</div>
+                    Create a quiz game with at least 5 questions. Store questions and answers, check user responses, keep score, and give a final grade with encouraging feedback.
+                </div>
+                <div class="tips">
+                    <div class="tips-title">💡 New Concepts:</div>
+                    <ul>
+                        <li>Dictionaries: <code>{"question": "answer"}</code></li>
+                        <li>Or use lists of lists to store questions</li>
+                        <li>Percentage calculations</li>
+                        <li>Conditional feedback based on score</li>
+                    </ul>
+                </div>
+                <div class="bonus">
+                    <div class="bonus-title">🌟 Bonus Challenge:</div>
+                    Add multiple choice questions, a timer, or let users choose quiz topics!
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="day7-check">
+                    <label for="day7-check">I completed this challenge!</label>
+                </div>
+            </div>
+            
+            <button class="reset-btn" onclick="resetProgress()">Reset All Progress</button>
+        </div>
+    </div>
+    
+    <script>
+        // Load saved progress
+        function loadProgress() {
+            for (let i = 1; i <= 7; i++) {
+                const checkbox = document.getElementById(`day${i}-check`);
+                const saved = localStorage.getItem(`day${i}`) === 'true';
+                checkbox.checked = saved;
+                updateDayCard(i, saved);
+            }
+            updateStats();
+        }
+        
+        // Update day card appearance
+        function updateDayCard(day, completed) {
+            const card = document.querySelector(`[data-day="${day}"]`);
+            if (completed) {
+                card.classList.add('completed');
+                card.classList.remove('active');
+            } else {
+                card.classList.remove('completed');
+                // Highlight the next incomplete day
+                const prevCompleted = day === 1 || localStorage.getItem(`day${day-1}`) === 'true';
+                if (prevCompleted || day === 1) {
+                    card.classList.add('active');
+                }
+            }
+        }
+        
+        // Update statistics
+        function updateStats() {
+            let completed = 0;
+            for (let i = 1; i <= 7; i++) {
+                if (localStorage.getItem(`day${i}`) === 'true') {
+                    completed++;
+                }
+            }
+            
+            const percent = Math.round((completed / 7) * 100);
+            document.getElementById('completedDays').textContent = completed;
+            document.getElementById('percentComplete').textContent = percent + '%';
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+        
+        // Add event listeners to all checkboxes
+        for (let i = 1; i <= 7; i++) {
+            const checkbox = document.getElementById(`day${i}-check`);
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(`day${i}`, this.checked);
+                updateDayCard(i, this.checked);
+                updateStats();
+            });
+        }
+        
+        // Reset function
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress?')) {
+                for (let i = 1; i <= 7; i++) {
+                    localStorage.removeItem(`day${i}`);
+                    document.getElementById(`day${i}-check`).checked = false;
+                    updateDayCard(i, false);
+                }
+                updateStats();
+            }
+        }
+        
+        // Initialize
+        loadProgress();
+    </script>
+</body>
+</html>
