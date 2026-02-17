@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Calculator</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/script.js" defer></script>
+</head>
+<body>
+    <div class="main">
+        <div class="calcContainer">
+            <h1>Welcome to the Calculator!</h1>
+            <label class="input" for="input">Enter Calculation:</label>
+            <input type="text" class="input" id="input" name="input">
+            <p id="calc"></p>
+            <p id="result"></p>
+            <div class="calcButtons">
+                <button class="calcButton" id="AC">AC</button>
+                <button class="calcButton" id="(">(</button>
+                <button class="calcButton" id=")">)</button>
+                <button class="calcButton" id="/">/</button>
+                <button class="calcButton" id="7">7</button>
+                <button class="calcButton" id="8">8</button>
+                <button class="calcButton" id="9">9</button>
+                <button class="calcButton" id="*">*</button>
+                <button class="calcButton" id="4">4</button>
+                <button class="calcButton" id="5">5</button>
+                <button class="calcButton" id="6">6</button>                <button class="calcButton" id="-">-</button>
+                <button class="calcButton" id="1">1</button>
+                <button class="calcButton" id="2">2</button>
+                <button class="calcButton" id="3">3</button>
+                <button class="calcButton" id="+">+</button>
+                <button class="calcButton" id="DEL">DEL</button>
+                <button class="calcButton" id="0">0</button>
+                <button class="calcButton" id=".">.</button>
+                <button class="calcButton" id="=">=</button>
+            </div>
+        </div>
+        <div class="history" id="history">
+            <h1>History</h1>
+            <li id="histList"></li>
+        </div>
+
+    </div>
+    <div class="histContainer">
+        <button id="toggleHistory">History</button>
+    </div>
+</body>
+</html>
