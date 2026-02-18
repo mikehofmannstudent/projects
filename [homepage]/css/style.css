@@ -41,7 +41,11 @@ a {
     font-size: 20px;
     font-weight: 700;
     color: #2B2A2A;
-    padding-bottom: 30px;
+    margin-bottom: 30px;
+}
+
+button {
+    font-size: 16px;
 }
 
 .main {
@@ -67,6 +71,7 @@ a {
     align-items: center;
     top: 15%;
     min-height: 40vh;
+    min-width: 50vh;
     width: 30%;
     border-style: solid;
     border-width: 15px;
@@ -75,4 +80,35 @@ a {
     border-color: #E7DEAF;
     margin-top: 100px;
     margin-bottom: 100px;
+}
+
+.dropbtn {
+    font-family: 'Nunito';
+    color: #2B2A2A;
+    background-color: #E7DEAF;
+    border-color: #D7C097;
+    border-style: solid;
+    border-radius: 10px;
+    padding: 2px 10px;
+    cursor: pointer;
+}
+
+.dropbtn.active {
+    background-color: #D7C097;
+    border-color: #E7DEAF;
+}
+
+.dropdown-content {
+    display: none;
+}
+
+.dropdown-content.show {
+    display: block;
+    flex-direction: row;
+}
+
+.calculator-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
 }
