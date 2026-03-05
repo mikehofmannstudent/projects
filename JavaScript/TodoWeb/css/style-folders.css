@@ -1,0 +1,52 @@
+.hidden {
+    display: none;
+}
+
+.folderBox {
+    font-size: 24px;
+    border-radius: 10px;
+    height: 80px;
+}
+
+.button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.button-wrapper:hover .delFolder{
+    opacity: 1;
+}
+
+.delFolder {
+    position: absolute;
+    top: 25px;
+    right: 10px;
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    font-size: 16px;
+}
+
+#addFolderToggle {
+    font-size: 50px;
+    min-width: 200px;
+}
+
+#addFolderBox {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-top: 10px;
+    width: 300px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+
+#foldersGridContainer {
+    display: grid;
+    position: relative;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+    width: 400px;
+}
