@@ -104,7 +104,7 @@ export default function CatClickerGame() {
       return result.newProgress;
     });
 
-    setTimeout(() => setIsClicked(false), 150);
+    setTimeout(() => setIsClicked(false), 50);
   };
 
   // Autoclicker
@@ -186,86 +186,116 @@ export default function CatClickerGame() {
   const progressPercent = (clickProgress / 50) * 100;
 
   return (
-    <div style={{ textAlign: "center", paddingTop: "50px" }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        display: "flex",
+      }}
+    >
 
-      <h1>🐱 Cat Clicker</h1>
-
-      <h2>Points: {Math.floor(points)}</h2>
-
-      <p>Clicks: {Math.floor(clickProgress)} / 50</p>
-
-      {/* Progress Bar */}
+      {/* Store panel */}
       <div
         style={{
-          width: "300px",
-          height: "20px",
-          background: "#ddd",
-          margin: "0 auto 20px",
-          borderRadius: "10px",
-          overflow: "hidden"
-        }}
+          width: "250px",
+          padding: "20px",
+          backgroundColor: "#808080",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          color: "white",
+        }}  
       >
-        <div
-          style={{
-            width: `${progressPercent}%`,
-            height: "100%",
-            background: "#4caf50",
-            transition: "width 0.2s"
-          }}
-        />
+        <h2>Shop</h2>
+
+        <button onClick={buyClickMultiplier} disabled={points < clickMultiplierPrice}>
+          Click Multiplier (x{clickMultiplier}) — {clickMultiplierPrice}
+        </button>
+
+        <p>Click Multiplier Level: {clickMultiplierLevel}</p>
+
+        <br /><br />
+
+        <button onClick={buyAutoClicker} disabled={points < autoClickerPrice}>
+          Auto Clicker ({autoClicksPerSecond}/sec) — {autoClickerPrice}
+        </button>
+
+        <p>Autoclicker Level: {autoClickerLevel}</p>
+
+        <br /><br />
+
+        <button onClick={buyRewardMultiplier} disabled={points < rewardMultiplierPrice}>
+          Reward Multiplier (x{rewardMultiplier}) — {rewardMultiplierPrice}
+        </button>
+
+        <p>Reward Multiplier Level: {rewardMultiplierLevel}</p>
       </div>
 
-      {/* Cat Button */}
-      <img
-        src={currentCat}
-        alt="cat"
-        onClick={handleClick}
+      <div
         style={{
-          width: "200px",
-          height: "200px",
-          objectFit: "contain",
-          cursor: "pointer",
-          transform: isClicked ? "scale(0.9)" : "scale(1)",
-          transition: "0.1s"
-        }}
-      />
-
-      <h2>Shop</h2>
-
-      <button onClick={buyClickMultiplier} disabled={points < clickMultiplierPrice}>
-        Click Multiplier (x{clickMultiplier}) — {clickMultiplierPrice}
-      </button>
-
-      <br /><br />
-
-      <button onClick={buyAutoClicker} disabled={points < autoClickerPrice}>
-        Auto Clicker ({autoClicksPerSecond}/sec) — {autoClickerPrice}
-      </button>
-
-      <br /><br />
-
-      <button onClick={buyRewardMultiplier} disabled={points < rewardMultiplierPrice}>
-        Reward Multiplier (x{rewardMultiplier}) — {rewardMultiplierPrice}
-      </button>
-
-      <p>Reward Multiplier Level: {rewardMultiplierLevel}</p>
-
-      <br /><br />
-
-      <button
-        onClick={resetGame}
-        style={{
-          padding: "10px 20px",
-          fontSize: "16px",
-          backgroundColor: "#f44336",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer"
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          gap: "20px",
+          position: "relative",
         }}
       >
-        Reset Game
-      </button>
+        <h1>🐱 Cat Clicker</h1>
+
+        <h2>Points: {Math.floor(points)}</h2>
+
+        {/* Cat Button */}
+        <img
+          src={currentCat}
+          alt="cat"
+          onClick={handleClick}
+          style={{
+            width: "200px",
+            height: "200px",
+          }}
+        />
+
+        <p>Clicks: {Math.floor(clickProgress)} / 50</p>
+
+        {/* Progress Bar */}
+        <div
+          style={{
+            width: "300px",
+            height: "20px",
+            background: "#ddd",
+            margin: "0 auto 20px",
+            borderRadius: "10px",
+            overflow: "hidden"
+          }}
+        >
+          <div
+            style={{
+              width: `${progressPercent}%`,
+              height: "100%",
+              background: "#4caf50",
+              transition: "width 0.2s"
+            }}
+          />
+        </div>
+
+        <button
+          onClick={resetGame}
+          style={{
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#f44336",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer"
+          }}
+        >
+          Reset Game
+        </button>
+      </div>
 
       <p>Total Points Earned: {Math.floor(totalPoints)}</p>
 
