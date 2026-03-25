@@ -278,7 +278,9 @@ document.addEventListener("DOMContentLoaded", () => {
     calculator.addEventListener("click", function (e) {
         if (e.target.tagName == "BUTTON") {
             const value = e.target.textContent;
-            if (value === "AC") {
+            if (value === "÷") {
+                inputElement.value += "/"
+            } else if (value === "AC") {
                 inputElement.value = "";
             } else if (value === "DEL") {
                 inputElement.value = inputElement.value.slice(0, -1);
