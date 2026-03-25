@@ -209,7 +209,7 @@ function calculate (tokens) {
     if (result % 1 === 0) {
         return parseInt(result);
     } else {
-        return Math.round(result * 100) / 100
+        return Math.round(result * 10000) / 10000
     }
 }
 
