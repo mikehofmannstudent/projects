@@ -413,3 +413,54 @@ function clearAll() {
     currentInput = "0";
     updateDisplay();
 }
+
+// Handle keystrokes
+document.addEventListener("keydown", (event) => {
+    const key = event.key;
+
+    // Numbers and decimal points
+    if (key >= "0" && key <= "9" || key === ".") {
+        appendNumber(key);
+        return;
+    }
+
+    // Operators
+    if (operators.includes(key)) {
+        if (key === "/") {
+            event.preventDefault();
+        }
+        appendOperator(key);
+        return;
+    }
+
+    // Parenthesis
+    if (["(", ")"].includes(key)) {
+        appendParenthesis(key);
+        return;
+    }
+
+    // Enter or =
+    if (["Enter", "="].includes(key)) {
+        event.preventDefault();
+        calculate();
+        return;
+    }
+
+    // Backspace
+    if (key === "Backspace") {
+        event.preventDefault();
+        deleteLast();
+        return;
+    }
+
+    // Clear all
+    if (key === "Escape") {
+        clearAll();
+        return;
+    }
+
+    // A for ANS
+    if (key === "a") {
+        appendANS();
+    }
+});
