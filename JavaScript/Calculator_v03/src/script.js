@@ -1,13 +1,13 @@
-// === STATE ===
 let currentInput = "0";
 let previousInput = [];
 let currentAnswer = null;
 let lastAnswer = null;
 let errorMessage = null;
-let postfix = [];
-let operatorStack = [];
+// let deleteNumber = "";
+let parenBalance = 0;
 
 const operators = ["+", "-", "×", "÷"];
+const precedence = { "+": 1, "-": 1, "×": 2, "÷": 2 };
 
 const previousDisplay = document.getElementById("previousDisplay");
 const currentDisplay = document.getElementById("currentDisplay");
@@ -21,12 +21,12 @@ function updateDisplay() {
     }
 
     // Update last answer
-    if (lastAnswer) {
+    if (lastAnswer !== null) {
         ansDisplay.textContent = `ANS: ${lastAnswer}`;
     }
 
     // Display result
-    if (currentAnswer) {
+    if (currentAnswer !== null) {
         currentDisplay.textContent = currentAnswer;
         return;
     }
@@ -35,6 +35,7 @@ function updateDisplay() {
 
     currentDisplay.textContent = displayValue;
 
+    // Scrolling mechanic
     const container = currentDisplay.parentElement;
     if (container) {
         // Find the scrollable container
@@ -63,6 +64,11 @@ function appendNumber(number) {
         return;
     }
 
+    // Prevent number after closing parenthesis
+    if (previousInput[previousInput.length - 1] === ")") {
+        return;
+    }
+
     // Enter first number, preventing leading zeros
     if (currentInput === "0" && number !== ".") {
         currentInput = number;
@@ -83,8 +89,6 @@ function appendNumber(number) {
 }
 
 function appendOperator(operator) {
-    const precedence = { "+": 1, "-": 1, "×": 2, "÷": 2 };
-
     // Operator after answer
     if (currentAnswer) {
         currentInput = currentAnswer;
@@ -93,10 +97,10 @@ function appendOperator(operator) {
 
     // Add operator after closed parenthesis
     if (previousInput[previousInput.length - 1] === ")") {
-        operatorStack.push(operator);
-
+        // operatorStack.push(operator);
         previousInput.push(operator);
         updateDisplay();
+        return;
     }
 
     // Prevent mutiple operators
@@ -104,94 +108,59 @@ function appendOperator(operator) {
         return;
     }
 
-    // Add number to postifix
-    postfix.push(currentInput);
-
-    // Move operator from stack to postfix
-    while (operatorStack && precedence[operatorStack[operatorStack.length - 1]] >= precedence[operator]) {
-        postfix.push(operatorStack.pop());
-    }
-
-    operatorStack.push(operator);
-
     // Clear current input and update display
     previousInput.push(currentInput, operator);
-    console.log(previousInput);
     currentInput = "";
     updateDisplay();
 }
 
 function appendParenthesis(paren) {
+    const previousToken = previousInput[previousInput.length - 1];
+    console.log(previousInput.length)
+    
     // Remove error message and result
     errorMessage = null;
     currentAnswer = null;
 
     // Handle opening parenthesis
     if (paren === "(") {
-        // Multiplication with a number or parentesis
-        if ((currentInput !== "" && previousInput[previousInput.length - 1] !== "(")
-            || previousInput[previousInput.length - 1] === ")") {
-
-            // Move all operators to postfix on parenthesis 
-            if (previousInput[previousInput.length - 1] === ")") {
-                while (operatorStack.length > 0) {
-                    let op = operatorStack.pop();
-
-                    if (op === "(") {
-                        break;
-                    }
-                    
-                    postfix.push(op); 
-                }
-            }
-            // Move number to postfix
-            else {
-                postfix.push(currentInput);
-            }
-
-            operatorStack.push("×");
+        // Multiplication with a number 
+        if (
+            (!isNaN(currentInput) ||
+            (!isNaN(currentInput) && previousToken !== "(")) &&
+            (currentInput !== "0" || previousInput.length > 0)
+        ) {
             previousInput.push(currentInput);
-            currentInput = "";
         }
 
-        operatorStack.push("(");
+        // Update previous input
+        currentInput = "";
         previousInput.push("(");
+        parenBalance++;
     }
     // Handle closing parenthesis
     else if (paren === ")") {
         // Assure opening parethesis
-        if (!operatorStack.includes("(")) {
+        if (parenBalance === 0) {
             return;
         }
 
         // Prevent closing right after opening parenthesis
-        if (currentInput === "" && previousInput[previousInput.length - 1] === "(") {
+        if (currentInput === "" && previousToken === "(") {
             return;
         }
 
         // Prevent closing brackets after operator
-        if (currentInput === "" && operators.includes(previousInput[previousInput.length - 1])) {
+        if (
+            currentInput === "" &&
+            operators.includes(previousToken)
+        ) {
             return;
-        }
-
-        // Add current number to postfix
-        if (currentInput !== "") {
-            postfix.push(currentInput);
-        }
-
-        // Move operators to postfix
-        while (operatorStack.length > 0) {
-            let op = operatorStack.pop();
-
-            if (op === "(") {
-                break;
-            }
-            
-            postfix.push(op); 
         }
 
         previousInput.push(currentInput, ")");
         currentInput = "";
+        parenBalance--;
     }
     
     updateDisplay();
@@ -240,16 +209,24 @@ function formatNumber(num) {
 }
 
 function calculate() {
-    
-    // Finalize postfix
-    if (currentInput !== "") {
-        previousInput.push(currentInput);
-        postfix.push(currentInput);
-        currentInput = "";
+    // Display 0 when nothing is shown
+    if (
+        currentInput === "0" || currentInput === "" &&
+        previousInput.length === 0
+    ) {
+        currentAnswer = null;
+        currentInput = "0";
+        updateDisplay();
+        return;
     }
 
-    while (operatorStack.length > 0) {
-        postfix.push(operatorStack.pop()); 
+    // Generate postfix
+    let postfix = [];
+    let operatorStack = [];
+
+    // Add remaining numbers to previous input
+    if (currentInput !== "") {
+        previousInput.push(currentInput);
     }
 
     // Prevent ending with an operator
@@ -259,22 +236,74 @@ function calculate() {
         return;
     }
 
-    // Prevent ending with an open parenthesis
-    if (postfix.includes("(") || postfix.includes(")")){
-        handleError("Invalid parenthesis");
-        updateDisplay;
-        return;
-    }
+    let i = 0;
 
-    // Display 0 when nothing is shown
-    if (currentInput === "0" || currentInput === "" && previousInput.length === 0) {
-        currentAnswer = null;
-        currentInput = "0";
-        previousInput = [];
-        postfix = [];
-        updateDisplay();
-        return;
+    // Loop through previous input
+    while (i < previousInput.length) {
+        let token = previousInput[i];
+
+        // Handle numbers
+        if (!isNaN(token)) {
+            postfix.push(token);
+        }
+        // Handle operators
+        else if (operators.includes(token)) {
+            if (
+                operatorStack.length !== 0 && 
+                precedence[operatorStack[operatorStack.length - 1]] >= precedence[token]
+            ) {
+                postfix.push(operatorStack.pop());
+            }
+
+            operatorStack.push(token);
+        }
+        // Handle opening parenthesis
+        else if (token === "(") {
+            // Move all operators to postfix on parenthesis 
+            if (previousInput[i - 1] === ")") {
+                while (operatorStack.length > 0) {
+                    let op = operatorStack.pop();
+
+                    if (op === "(") {
+                        break;
+                    }
+                    
+                    postfix.push(op); 
+                }
+            }
+
+            if (
+                !isNaN(previousInput[i - 1]) ||
+                previousInput[i - 1] === ")"
+            ) {
+                operatorStack.push("×");
+            }
+
+            operatorStack.push("(");
+        }
+        // Handle closing parenthesis
+        else if (token === ")") {
+            // Move operators to postfix
+            while (operatorStack.length > 0) {
+                let op = operatorStack.pop();
+
+                if (op === "(") {
+                    break;
+                }
+                
+                postfix.push(op); 
+            }
+        }
+
+        i++;
+        console.log(postfix)
     }
+    
+    // Add remaining operators to postfix
+    while (operatorStack.length > 0) {
+        postfix.push(operatorStack.pop())
+    }
+    console.log(postfix)
 
     // Calculate 
     let evalStack = [];
@@ -284,7 +313,7 @@ function calculate() {
     }
     
     while (postfix.length > 0) {
-        token = postfix.shift();
+        const token = postfix.shift();
         // Add numbers to eval stack
         if (!isNaN(token)) {
             evalStack.push(parseFloat(token));
@@ -299,10 +328,17 @@ function calculate() {
                 case "+": result = left + right; break;
                 case "-": result = left - right; break;
                 case "×": result = left * right; break;
-                case "÷": result = left / right; break;
+                case "÷": 
+                    if (right === 0) {
+                        handleError("No zero division");
+                        updateDisplay();
+                        return;
+                    }
+                    result = left / right; 
+                    break;
             }
 
-            evalStack.push(formatNumber(result));
+            evalStack.push(parseFloat(formatNumber(result)));
         }
     }
 
@@ -311,5 +347,46 @@ function calculate() {
     
     currentInput = "";
     previousInput = [];
+    updateDisplay();
+}
+
+function deleteLast() {
+    const deleteToken = previousInput[previousInput.length - 1]
+    // Prevent deleting initial zero
+    if (currentInput === "0" && previousInput.length === 0) {
+        return;
+    }
+
+    // Delete newest number
+    if (currentInput !== "") {
+        // Starting number will always be 0
+        if (previousInput.length === 0 && currentInput.length === 1) {
+            currentInput = "0";
+        }
+        // Remove one character from number
+        else if (currentInput !== "") {
+            let digits = [];
+            digits = currentInput.split("");
+            digits.pop();
+            currentInput = digits.join("");
+        }
+    }
+
+    // Delete operator
+    else if (operators.includes(deleteToken) && currentInput === "") {
+        previousInput.pop();
+        currentInput = previousInput.pop();
+    }
+
+    // Delete parenthesis
+    else if ((deleteToken === ")" || deleteToken === "(") && currentInput === "") {
+        previousInput.pop();
+
+        // Remove number multplication with parenthesis
+        if (!isNaN(previousInput[previousInput.length - 12])) {
+            currentInput = previousInput.pop();
+        }
+    }
+
     updateDisplay();
 }
