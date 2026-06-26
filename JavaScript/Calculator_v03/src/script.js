@@ -3,7 +3,6 @@ let previousInput = [];
 let currentAnswer = null;
 let lastAnswer = null;
 let errorMessage = null;
-// let deleteNumber = "";
 let parenBalance = 0;
 
 const operators = ["+", "-", "×", "÷"];
@@ -27,11 +26,19 @@ function updateDisplay() {
 
     // Display result
     if (currentAnswer !== null) {
-        currentDisplay.textContent = currentAnswer;
+        currentInput = currentAnswer;
+        currentDisplay.textContent = currentInput;
+        currentAnswer = null;
         return;
     }
 
-    let displayValue = previousInput.join(" ") + " " + currentInput;
+    let displayValue = "";
+    if (previousInput.length > 0) {
+        displayValue = previousInput.join(" ") + " " + currentInput;
+    }
+    else {
+        displayValue = currentInput;
+    }
 
     currentDisplay.textContent = displayValue;
 
@@ -52,7 +59,6 @@ function updateDisplay() {
 function appendNumber(number) {
     // Remove error message and result
     errorMessage = null;
-    currentAnswer = null;
 
     // Prevent multiple decimal points
     if (number === "." && currentInput.includes(".")) {
@@ -89,12 +95,6 @@ function appendNumber(number) {
 }
 
 function appendOperator(operator) {
-    // Operator after answer
-    if (currentAnswer) {
-        currentInput = currentAnswer;
-        currentAnswer = null;
-    }
-
     // Add operator after closed parenthesis
     if (previousInput[previousInput.length - 1] === ")") {
         // operatorStack.push(operator);
@@ -120,7 +120,6 @@ function appendParenthesis(paren) {
     
     // Remove error message and result
     errorMessage = null;
-    currentAnswer = null;
 
     // Handle opening parenthesis
     if (paren === "(") {
@@ -169,7 +168,6 @@ function appendParenthesis(paren) {
 function appendANS() {
     // Remove error message and result
     errorMessage = null;
-    currentAnswer = null;
 
     // Handle no previous answers
     if (lastAnswer === null) {
@@ -209,12 +207,12 @@ function formatNumber(num) {
 }
 
 function calculate() {
-    // Display 0 when nothing is shown
+    console.log(currentAnswer)
+    // Display 0 
     if (
-        currentInput === "0" || currentInput === "" &&
         previousInput.length === 0
     ) {
-        currentAnswer = null;
+        lastAnswer = currentInput;
         currentInput = "0";
         updateDisplay();
         return;
@@ -348,10 +346,20 @@ function calculate() {
     currentInput = "";
     previousInput = [];
     updateDisplay();
+    console.log(currentAnswer)
 }
 
 function deleteLast() {
     const deleteToken = previousInput[previousInput.length - 1]
+
+    // Remove error message
+    if (errorMessage !== null) {
+        errorMessage = null;
+        currentInput = "0";
+        updateDisplay();
+        return;
+    }
+    
     // Prevent deleting initial zero
     if (currentInput === "0" && previousInput.length === 0) {
         return;
@@ -388,5 +396,20 @@ function deleteLast() {
         }
     }
 
+    updateDisplay();
+}
+
+function clearAll() {
+    // Remove error message
+    if (errorMessage !== null) {
+        errorMessage = null;
+        currentInput = "0";
+        updateDisplay();
+        return;
+    }
+
+    // Clear previous and current input
+    previousInput = [];
+    currentInput = "0";
     updateDisplay();
 }
