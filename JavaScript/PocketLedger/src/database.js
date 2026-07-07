@@ -181,3 +181,17 @@ function countEntries(startDate, endDate) {
         WHERE date BETWEEN ? AND ?;
     `, [startDate, endDate])
 }
+
+function getCategories() {
+    return db.exec(`
+        SELECT DISTINCT category
+        FROM expenses
+        ORDER BY category;
+    `);
+}
+
+function deleteCategory(category) {
+    db.run(
+        `DELETE FROM expenses WHERE category = ?`
+    ), [category];
+}
