@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Transactions — PocketLedger</title>
+<link rel="icon" type="image/png" href="../assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../dist/output.css" />
+</head>
+<body class="bg-[var(--color-paper)] text-[var(--color-ink)]">
+
+<div class="flex min-h-screen">
+
+  <aside class="hidden lg:flex w-64 flex-col border-r border-[var(--color-sage-line)] bg-white px-4 py-6 shrink-0">
+    <a href="dashboard.html" class="flex items-center gap-2.5 px-2 mb-8">
+      <img src="../assets/logo.png" alt="" class="w-8 h-8 rounded-lg" />
+      <span class="font-display font-semibold text-lg tracking-tight">PocketLedger</span>
+    </a>
+    <nav class="flex flex-col gap-20 mt-30">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10.5 10 4l7 6.5M5 9v7a1 1 0 0 0 1 1h3v-5h2v5h3a1 1 0 0 0 1-1V9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Overview
+      </a>
+      <a href="transactions.html" class="nav-link-active">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h14M3 10h14M3 14h9" stroke-linecap="round"/></svg>
+        Transactions
+      </a>
+      <a href="reports.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16V9M10 16V4M16 16v-5" stroke-linecap="round"/></svg>
+        Reports
+      </a>
+    </nav>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <header class="flex items-center justify-between gap-4 border-b border-[var(--color-sage-line)] bg-white px-5 lg:px-8 py-4">
+      <div class="flex items-center gap-3 lg:hidden">
+        <img src="../assets/logo.png" alt="" class="w-7 h-7 rounded-lg" />
+        <span class="font-display font-semibold">PocketLedger</span>
+      </div>
+      <h1 class="hidden sm:block font-display text-xl font-semibold">Transactions</h1>
+      <a href="add-transaction.html" class="btn-primary text-sm py-2 px-4 ml-auto">
+        <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10" stroke-linecap="round"/></svg>
+        New entry
+      </a>
+    </header>
+
+    <main class="flex-1 px-5 lg:px-8 py-7 space-y-5">
+
+      <!-- Filters -->
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="relative flex-1 min-w-[220px] max-w-sm">
+          <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-ink-soft)]" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="M13 13l-2.5-2.5" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="Search description or payee" class="input-field pl-9" />
+        </div>
+        <select id="displayPeriod" class="input-field w-auto">
+          <option value="last30days">Last 30 days</option>
+          <option value="thisQuarter">This quarter</option>
+          <option value="thisYear">This year</option>
+          <option value="allTime">All time</option>
+        </select>
+      </div>
+
+      <!-- Ledger table -->
+      <section class="card overflow-hidden">
+        <div id="ledgerContainer" class="ledger-sheet h-[488px] overflow-y-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-[var(--color-ink-soft)] border-b border-[var(--color-sage-line)]">
+                <th class="font-medium px-5 lg:px-6 py-3 pl-[3.75rem]">Date</th>
+                <th class="font-medium px-3 py-3">Description</th>
+                <th class="font-medium px-3 py-3">Category</th>
+                <th class="font-medium px-3 py-3 text-right">Debit</th>
+                <th class="font-medium px-3 py-3 text-right">Credit</th>
+                <th class="font-medium px-5 lg:px-6 py-3 text-right">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerTable"></tbody>
+          </table>
+        </div>
+
+        <div class="flex items-center justify-between px-5 lg:px-6 py-4 border-t border-[var(--color-sage-line)] text-sm text-[var(--color-ink-soft)]">
+          <span id="ledgerTableFooter">Showing 7 of 142 entries</span>
+          <div class="flex items-center gap-2">
+            <button class="btn-secondary py-1.5 px-3 text-sm" disabled>Previous</button>
+            <button class="btn-secondary py-1.5 px-3 text-sm">Next</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div
+    id="expenseModal"
+    class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50"
+>
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-display text-lg font-semibold">
+                Transaction Details
+            </h2>
+
+            <button
+                id="deleteExpense"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+                Delete
+            </button>
+            <button id="closeModal" class="text-xl">&times;</button>
+        </div>
+
+        <div class="space-y-2 text-sm">
+            <p><strong>Date:</strong> <span id="modalDate"></span></p>
+            <p><strong>Type:</strong> <span id="modalType"></span></p>
+            <p><strong>Amount:</strong> <span id="modalAmount"></span></p>
+            <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+            <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+            <p><strong>Notes:</strong> <span id="modalNotes"></span></p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+    
+<script src="../src/database.js"></script>
+<script src="../src/app.js"></script>
+<script src="../src/transactions.js"></script>
+
+</body>
+</html>

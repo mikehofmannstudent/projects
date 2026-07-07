@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reports — PocketLedger</title>
+<link rel="icon" type="image/png" href="../assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../dist/output.css" />
+</head>
+<body class="bg-[var(--color-paper)] text-[var(--color-ink)]">
+
+<div class="flex min-h-screen">
+
+  <aside class="hidden lg:flex w-64 flex-col border-r border-[var(--color-sage-line)] bg-white px-4 py-6 shrink-0">
+    <a href="dashboard.html" class="flex items-center gap-2.5 px-2 mb-8">
+      <img src="../assets/logo.png" alt="" class="w-8 h-8 rounded-lg" />
+      <span class="font-display font-semibold text-lg tracking-tight">PocketLedger</span>
+    </a>
+    <nav class="flex flex-col gap-20 mt-30">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10.5 10 4l7 6.5M5 9v7a1 1 0 0 0 1 1h3v-5h2v5h3a1 1 0 0 0 1-1V9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Overview
+      </a>
+      <a href="transactions.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h14M3 10h14M3 14h9" stroke-linecap="round"/></svg>
+        Transactions
+      </a>
+      <a href="reports.html" class="nav-link-active">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16V9M10 16V4M16 16v-5" stroke-linecap="round"/></svg>
+        Reports
+      </a>
+    </nav>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <header class="flex items-center justify-between gap-4 border-b border-[var(--color-sage-line)] bg-white px-5 lg:px-8 py-4">
+      <h1 class="font-display text-xl font-semibold">Reports</h1>
+      <select id="period" class="input-field w-auto text-sm"></select>
+    </header>
+
+    <main class="flex-1 px-5 lg:px-8 py-7 space-y-6">
+
+      <!-- Income vs expense bar chart -->
+      <section class="card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-display text-lg font-semibold">Income vs. expenses</h2>
+          <div class="flex items-center gap-4 text-sm">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[var(--color-credit)]"></span>Income</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[var(--color-debit)]"></span>Expenses</span>
+          </div>
+        </div>
+        <div id="reportChart" class="flex items-end gap-6 h-48 px-2"></div>
+      </section>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Spend by category -->
+        <section class="card p-6">
+          <h2 class="font-display text-lg font-semibold mb-5">Spend by category</h2>
+          <ul id="categoryExpensesSummary" class="space-y-4"></ul>
+        </section>
+
+        <!-- Summary table -->
+        <section class="card p-6">
+          <h2 class="font-display text-lg font-semibold mb-5">Quarter summary</h2>
+          <dl id="expensesSummary" class="ledger-sheet-tight"></dl>
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+    
+<script src="../src/database.js"></script>
+<script src="../src/app.js"></script>
+<script src="../src/reports.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — PocketLedger</title>
+<link rel="icon" type="image/png" href="../assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../dist/output.css" />
+</head>
+<body class="bg-[var(--color-paper)] text-[var(--color-ink)]">
+
+<div class="flex min-h-screen">
+
+  <!-- Sidebar -->
+  <aside class="hidden lg:flex w-64 flex-col border-r border-[var(--color-sage-line)] bg-white px-4 py-6 shrink-0">
+    <a href="dashboard.html" class="flex items-center gap-2.5 px-2 mb-8">
+      <img src="../assets/logo.png" alt="" class="w-8 h-8 rounded-lg" />
+      <span class="font-display font-semibold text-lg tracking-tight">PocketLedger</span>
+    </a>
+
+    <nav class="flex flex-col gap-20 mt-30">
+      <a href="dashboard.html" class="nav-link-active">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10.5 10 4l7 6.5M5 9v7a1 1 0 0 0 1 1h3v-5h2v5h3a1 1 0 0 0 1-1V9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Overview
+      </a>
+      <a href="transactions.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h14M3 10h14M3 14h9" stroke-linecap="round"/></svg>
+        Transactions
+      </a>
+      <a href="reports.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16V9M10 16V4M16 16v-5" stroke-linecap="round"/></svg>
+        Reports
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <!-- Topbar -->
+    <header class="flex items-center justify-between gap-4 border-b border-[var(--color-sage-line)] bg-white px-5 lg:px-8 py-4">
+      <div class="flex items-center gap-3 lg:hidden">
+        <img src="../assets/logo.png" alt="" class="w-7 h-7 rounded-lg" />
+        <span class="font-display font-semibold">PocketLedger</span>
+      </div>
+      <div class="hidden sm:block">
+        <h1 class="font-display text-xl font-semibold">Overview</h1>
+        <p id="currentDate" class="text-sm text-[var(--color-ink-soft)]"></p>
+      </div>
+      <div class="flex items-center gap-3 ml-auto">
+        <a href="add-transaction.html" class="btn-primary text-sm py-2 px-4">
+          <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10" stroke-linecap="round"/></svg>
+          New entry
+        </a>
+      </div>
+    </header>
+
+    <main class="flex-1 px-5 lg:px-8 py-7 space-y-7">
+
+      <!-- Balance cards -->
+      <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="card p-5">
+          <p class="text-sm text-[var(--color-ink-soft)] mb-2">Net balance</p>
+          <p id="netBalance" class="font-mono tabular text-3xl font-medium"></p>
+          <p id="comparisonContainer" class="text-sm mt-2 flex items-center gap-1">
+            <svg id="comparisonArrow" class="w-3.5 h-3.5" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l4-4 4 4M7 5v8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="compareNetBalance"></span>
+          </p>
+        </div>
+        <div class="card p-5">
+          <p class="text-sm text-[var(--color-ink-soft)] mb-2">Credits this month</p>
+          <p id="thisMonthCredits" class="font-mono tabular text-3xl font-medium text-[var(--color-credit)]"></p>
+          <p id="creditEntries" class="text-sm text-[var(--color-ink-soft)] mt-2"></p>
+        </div>
+        <div class="card p-5">
+          <p class="text-sm text-[var(--color-ink-soft)] mb-2">Debits this month</p>
+          <p id="thisMonthDebits" class="font-mono tabular text-3xl font-medium text-[var(--color-debit)]"></p>
+          <p id="debitEntries" class="text-sm text-[var(--color-ink-soft)] mt-2"></p>
+        </div>
+      </section>
+
+      <!-- Recent ledger entries -->
+      <section class="card overflow-hidden">
+        <div class="flex items-center justify-between px-5 lg:px-6 py-4 border-b border-[var(--color-sage-line)]">
+          <h2 class="font-display text-lg font-semibold">Recent entries</h2>
+          <a href="transactions.html" class="text-sm font-medium text-[var(--color-brand-dark)] hover:underline">View full ledger →</a>
+        </div>
+
+        <div class="ledger-sheet">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="text-left text-[var(--color-ink-soft)]">
+                <th class="font-bold px-5 lg:px-6 pt-4 pb-2 pl-[3.75rem]">Date</th>
+                <th class="font-bold px-3 pt-4 pb-2">Description</th>
+                <th class="font-bold px-3 pt-4 pb-2">Category</th>
+                <th class="font-bold px-3 pt-4 pb-2 text-right">Debit</th>
+                <th class="font-bold px-3 pt-4 pb-2 text-right">Credit</th>
+                <th class="font-bold px-5 lg:px-6 pt-4 pb-2 text-right">Balance</th>
+              </tr>
+            </thead>
+            <tbody id="recentEntriesTable"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Upcoming -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <div class="card p-5">
+          <h3 class="font-display font-semibold mb-4">Upcoming</h3>
+          <ul id="upcomingList" class="divide-y divide-[var(--color-sage-line)]"></ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+    
+<script src="../src/database.js"></script>
+<script src="../src/app.js"></script>
+<script src="../src/dashboard.js"></script>
+
+</body>
+</html>

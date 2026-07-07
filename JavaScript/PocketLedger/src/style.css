@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@source "../pages/*.html";
+
+@theme {
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-paper: #FAF8F3;
+  --color-paper-rule: #E4DFD3;
+  --color-ink: #14241D;
+  --color-ink-soft: #43544C;
+  --color-sage: #E4EDE7;
+  --color-sage-line: #C9DCD2;
+  --color-brand: #16A876;
+  --color-brand-dark: #0F2A22;
+  --color-brand-light: #E9F7EF;
+  --color-debit: #B4501E;
+  --color-debit-light: #FBEAE0;
+  --color-credit: #137A52;
+  --color-credit-light: #E1F5EC;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .tabular {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: white;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-[var(--color-brand-dark)] text-[var(--color-paper)] font-medium px-5 py-2.5 transition-colors hover:bg-[var(--color-ink)] focus-visible:outline-2 focus-visible:outline-[var(--color-brand)];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-[var(--color-sage-line)] bg-white text-[var(--color-ink)] font-medium px-5 py-2.5 transition-colors hover:bg-[var(--color-sage)];
+  }
+
+  .input-field {
+    @apply w-full rounded-md border border-[var(--color-sage-line)] bg-white px-3.5 py-2.5 text-[var(--color-ink)] placeholder:text-[var(--color-ink-soft)]/50 focus:border-[var(--color-brand)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/20 transition;
+  }
+
+  .card {
+    @apply bg-white rounded-xl border border-[var(--color-sage-line)];
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-[var(--color-ink-soft)] hover:bg-[var(--color-sage)] hover:text-[var(--color-ink)] transition-colors;
+  }
+
+  .nav-link-active {
+    @apply flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium bg-[var(--color-brand-dark)] text-white;
+  }
+
+  .toggle-btn {
+    @apply py-2 rounded-md text-sm font-medium transition-all duration-150;
+    @apply text-[var(--color-ink-soft)];
+  }
+
+  .toggle-btn-active {
+    @apply bg-white shadow-sm text-[var(--color-credit)];
+  }
+}

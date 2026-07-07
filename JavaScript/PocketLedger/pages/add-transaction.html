@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>New entry — PocketLedger</title>
+<link rel="icon" type="image/png" href="../assets/logo.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../dist/output.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body class="bg-[var(--color-paper)] text-[var(--color-ink)]">
+
+<div class="flex min-h-screen">
+
+  <aside class="hidden lg:flex w-64 flex-col border-r border-[var(--color-sage-line)] bg-white px-4 py-6 shrink-0">
+    <a href="dashboard.html" class="flex items-center gap-2.5 px-2 mb-8">
+      <img src="../assets/logo.png" alt="" class="w-8 h-8 rounded-lg" />
+      <span class="font-display font-semibold text-lg tracking-tight">PocketLedger</span>
+    </a>
+    <nav class="flex flex-col gap-20 mt-30">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10.5 10 4l7 6.5M5 9v7a1 1 0 0 0 1 1h3v-5h2v5h3a1 1 0 0 0 1-1V9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Overview
+      </a>
+      <a href="transactions.html" class="nav-link-active">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 6h14M3 10h14M3 14h9" stroke-linecap="round"/></svg>
+        Transactions
+      </a>
+      <a href="reports.html" class="nav-link">
+        <svg class="w-4.5 h-4.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 16V9M10 16V4M16 16v-5" stroke-linecap="round"/></svg>
+        Reports
+      </a>
+    </nav>
+  </aside>
+
+  <div class="flex-1 flex flex-col min-w-0">
+
+    <header class="flex items-center gap-4 border-b border-[var(--color-sage-line)] bg-white px-5 lg:px-8 py-4">
+      <a href="transactions.html" class="text-[var(--color-ink-soft)] hover:text-[var(--color-ink)]" aria-label="Back to transactions">
+        <svg class="w-5 h-5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4l-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <h1 class="font-display text-xl font-semibold">New entry</h1>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center px-5 lg:px-8 py-7">
+      <div class="max-w-2xl">
+
+        <form class="card p-6 lg:p-8 space-y-6">
+
+          <!-- Debit/Credit toggle -->
+          <div>
+            <label class="block text-sm font-medium mb-2">Entry type</label>
+            <div class="grid grid-cols-2 gap-2 p-1 bg-[var(--color-sage)] rounded-lg">
+              <button type="button" class="toggle-btn">
+                Credit (money in)
+              </button>
+              <button type="button" class="toggle-btn toggle-btn-active">
+                Debit (money out)
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div>
+              <label for="date" class="block text-sm font-medium mb-1.5">Date</label>
+              <input 
+                type="text"
+                id="date"
+                name="date"
+                class="input-field font-mono"
+                placeholder="DD/MM/YYYY"
+              />
+            </div>
+            <div>
+              <label for="amount" class="block text-sm font-medium mb-1.5">Amount</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--color-ink-soft)] font-mono">$</span>
+                <input type="text" id="amount" name="amount" placeholder="0.00" class="input-field pl-7 font-mono tabular" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium mb-1.5">Description</label>
+            <input type="text" id="description" name="description" placeholder="e.g. Restaurant invoice" class="input-field" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-5">
+            <div>
+              <label for="category" class="block text-sm font-medium mb-1.5">Category</label>
+              <select id="category" name="category" class="input-field">
+                <option value="other">Create new category</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div id="newCategoryContainer">
+              <label for="newCategoryInput" class="block text-sm font-medium mb-1.5">New Category</label>
+              <input id="newCategoryInput" class="input-field" placeholder="Enter new category" />
+            </div>
+          </div>
+
+          <div>
+            <label for="notes" class="block text-sm font-medium mb-1.5">Notes <span class="text-[var(--color-ink-soft)] font-normal">(optional)</span></label>
+            <textarea id="notes" name="notes" rows="3" placeholder="Add any extra detail for this entry" class="input-field resize-none"></textarea>
+          </div>
+
+          <div class="flex items-center justify-end gap-3 pt-2 border-t border-[var(--color-sage-line)]">
+            <a href="transactions.html" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary">Save entry</button>
+          </div>
+
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+
+<script src="../src/database.js"></script>
+<script src="../src/app.js"></script>
+<script src="../src/add-transaction.js"></script>
+
+</body>
+</html>
