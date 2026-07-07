@@ -1,31 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
-    <link rel="stylesheet" href="[homepage]/css/style.css">
-    <script src="[homepage]/js/script.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects Homepage</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: '#F6F3EC',
+          ink: '#1F1C16',
+          brass: '#B5892B',
+          moss: '#4C5B44',
+        },
+        fontFamily: {
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        },
+        backgroundImage: {
+          grid: "linear-gradient(to right, rgba(31,28,22,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(31,28,22,0.06) 1px, transparent 1px)",
+        },
+        backgroundSize: {
+          grid: '32px 32px',
+        },
+      },
+    },
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
 </head>
-<body>
-    <div class="main">
-        <div class="title">
-            <h1>Projects Homepage</h1>
+
+<body class="bg-paper text-ink font-sans antialiased bg-grid bg-grid selection:bg-brass/30">
+
+  <div class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-ink/10">
+      <div class="max-w-5xl mx-auto px-6 md:px-10 py-10 flex items-end justify-between gap-6">
+        <div>
+          <p class="font-mono text-xs tracking-[0.25em] uppercase text-moss mb-3">index.html — local build catalog</p>
+          <h1 class="font-mono text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-[1.05]">
+            Projects<span class="text-brass">.</span>Homepage
+          </h1>
         </div>
-        <div class="content">
-            <h2><u>Projects</u></h2>
-            <div class="calculator-container">
-                <a href="JavaScript/Calculator_v03/index.html">🧮 Caclulator</a>
-                <button class="dropbtn" id="dropbtn">Versions</button>
-                <div class="dropdown-content" id="dropdown-content">
-                    <a href="JavaScript/Calculator/index.html">v01</a>
-                    <br>
-                    <a href="JavaScript/Calculator_v02/index.html">v02</a>
-                    <br>
-                    <a href="JavaScript/Calculator_v03/index.html">v03</a>
+        <div class="hidden sm:flex flex-col items-end font-mono text-xs text-ink/50 leading-relaxed">
+          <span id="clock">--:--:--</span>
+          <span>status: <span class="text-moss font-semibold">online</span></span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1">
+      <div class="max-w-5xl mx-auto px-6 md:px-10 py-14">
+
+        <div class="flex items-center gap-3 mb-8">
+          <h2 class="font-mono text-sm uppercase tracking-[0.2em] text-ink/60">Projects</h2>
+          <span class="h-px flex-1 bg-ink/15"></span>
+          <span class="font-mono text-xs text-ink/40">01 found</span>
+        </div>
+
+        <!-- Project Card -->
+        <div class="group relative border border-ink/15 bg-paper rounded-sm hover:border-brass/60 transition-colors duration-300">
+          <!-- corner tick marks, workbench-card detail -->
+          <span class="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-ink/25 group-hover:border-brass transition-colors duration-300"></span>
+          <span class="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-ink/25 group-hover:border-brass transition-colors duration-300"></span>
+
+          <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
+
+            <!-- Icon + title -->
+            <a href="JavaScript/Calculator_v03/index.html"
+               class="flex items-center gap-4 flex-1 min-w-0">
+              <span class="shrink-0 w-14 h-14 rounded-sm bg-ink text-paper flex items-center justify-center text-2xl">
+                🧮
+              </span>
+              <span class="min-w-0">
+                <span class="block font-mono text-lg font-semibold group-hover:text-brass transition-colors duration-200">
+                  Calculator
+                </span>
+                <span class="block text-sm text-ink/55 truncate">
+                  JavaScript · basic arithmetic, built across three iterations
+                </span>
+              </span>
+            </a>
+
+            <!-- Latest tag + version dropdown -->
+            <div class="flex items-center gap-3 shrink-0 md:pl-6 md:border-l md:border-ink/10">
+              <a href="JavaScript/Calculator_v03/index.html"
+                 class="font-mono text-xs px-2.5 py-1 rounded-full bg-moss/10 text-moss border border-moss/30 whitespace-nowrap">
+                latest · v03
+              </a>
+
+              <div class="relative">
+                <button id="dropbtn"
+                        aria-expanded="false"
+                        aria-controls="dropdown-content"
+                        class="font-mono text-xs uppercase tracking-wide px-3 py-1.5 rounded-sm border border-ink/20 text-ink/70 hover:border-ink hover:text-ink transition-colors duration-200 flex items-center gap-1.5">
+                  Versions
+                  <svg class="w-3 h-3 transition-transform duration-200" id="dropicon" viewBox="0 0 12 12" fill="none">
+                    <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <div id="dropdown-content"
+                     class="hidden absolute right-0 mt-2 w-40 bg-paper border border-ink/15 rounded-sm shadow-lg shadow-ink/5 overflow-hidden z-10">
+                  <a href="JavaScript/Calculator/index.html"
+                     class="flex items-center justify-between px-3.5 py-2.5 font-mono text-sm text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors duration-150">
+                    v01
+                    <span class="text-[10px] text-ink/35 uppercase tracking-wide">first</span>
+                  </a>
+                  <a href="JavaScript/Calculator_v02/index.html"
+                     class="flex items-center justify-between px-3.5 py-2.5 font-mono text-sm text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors duration-150 border-t border-ink/10">
+                    v02
+                  </a>
+                  <a href="JavaScript/Calculator_v03/index.html"
+                     class="flex items-center justify-between px-3.5 py-2.5 font-mono text-sm text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors duration-150 border-t border-ink/10">
+                    v03
+                    <span class="text-[10px] text-brass uppercase tracking-wide">latest</span>
+                  </a>
                 </div>
+              </div>
             </div>
+
+          </div>
         </div>
-    </div>
+
+        <div class="group relative border border-ink/15 bg-paper rounded-sm hover:border-brass/60 transition-colors duration-300">
+          <!-- corner tick marks, workbench-card detail -->
+          <span class="absolute -top-px -left-px w-3 h-3 border-t-2 border-l-2 border-ink/25 group-hover:border-brass transition-colors duration-300"></span>
+          <span class="absolute -bottom-px -right-px w-3 h-3 border-b-2 border-r-2 border-ink/25 group-hover:border-brass transition-colors duration-300"></span>
+
+          <div class="p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6">
+
+            <!-- Icon + title -->
+            <a href="JavaScript/PocketLedger/pages/dashboard.html"
+               class="flex items-center gap-4 flex-1 min-w-0">
+              <span class="shrink-0 w-14 h-14 rounded-sm bg-ink text-paper flex items-center justify-center text-2xl">
+                📒
+              </span>
+              <span class="min-w-0">
+                <span class="block font-mono text-lg font-semibold group-hover:text-brass transition-colors duration-200">
+                  PocketLedger
+                </span>
+                <span class="block text-sm text-ink/55 truncate">
+                  JavaScript · personal finance tracking
+                </span>
+              </span>
+            </a>
+
+            <!-- Latest tag + version dropdown -->
+            <div class="flex items-center gap-3 shrink-0 md:pl-6 md:border-l md:border-ink/10">
+              <a href="JavaScript/PocketLedger/pages/dashboard.html"
+                 class="font-mono text-xs px-2.5 py-1 rounded-full bg-moss/10 text-moss border border-moss/30 whitespace-nowrap">
+                latest · v01
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Empty slot hint, keeps the index feeling alive/extensible -->
+        <div class="mt-4 border border-dashed border-ink/15 rounded-sm p-6 md:p-8 flex items-center gap-4 text-ink/35">
+          <span class="w-14 h-14 rounded-sm border border-dashed border-ink/20 flex items-center justify-center text-xl shrink-0">+</span>
+          <span class="font-mono text-sm">next build goes here</span>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-ink/10">
+      <div class="max-w-5xl mx-auto px-6 md:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-2 font-mono text-xs text-ink/40">
+        <span>built locally, served locally</span>
+        <span>1 project · 3 versions</span>
+      </div>
+    </footer>
+
+  </div>
+
+<script>
+  // Dropdown toggle
+  const dropbtn = document.getElementById('dropbtn');
+  const dropdown = document.getElementById('dropdown-content');
+  const dropicon = document.getElementById('dropicon');
+
+  dropbtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = !dropdown.classList.contains('hidden');
+    dropdown.classList.toggle('hidden');
+    dropbtn.setAttribute('aria-expanded', String(!isOpen));
+    dropicon.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && e.target !== dropbtn) {
+      dropdown.classList.add('hidden');
+      dropbtn.setAttribute('aria-expanded', 'false');
+      dropicon.style.transform = 'rotate(0deg)';
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dropdown.classList.add('hidden');
+      dropbtn.setAttribute('aria-expanded', 'false');
+      dropicon.style.transform = 'rotate(0deg)';
+    }
+  });
+
+  // Little live clock for the header — pure atmosphere, matches the "workbench" feel
+  const clock = document.getElementById('clock');
+  function tick() {
+    const now = new Date();
+    clock.textContent = now.toLocaleTimeString('en-GB', { hour12: false });
+  }
+  tick();
+  setInterval(tick, 1000);
+</script>
+
 </body>
 </html>
