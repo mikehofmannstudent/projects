@@ -425,11 +425,17 @@ document.addEventListener("keydown", (event) => {
     }
 
     // Operators
-    if (operators.includes(key)) {
+    if (operators.includes(key) || ["/", "*"].includes(key)) {
         if (key === "/") {
             event.preventDefault();
         }
-        appendOperator(key);
+        if (key === "/") {
+            appendOperator("÷");
+        } else if (key === "*") {
+            appendOperator("×");
+        } else {
+            appendOperator(key);
+        }
         return;
     }
 
