@@ -70,7 +70,7 @@ function handleTable(option) {
                 <td class="px-5 lg:px-6 h-11 pl-[3.75rem] whitespace-nowrap text-[var(--color-ink-soft)]">${formattedDate}</td>
                 <td class="px-3 font-medium">${expense[4]}</td>
                 <td class="px-3"><span class="inline-block px-2 py-0.5 rounded text-xs bg-[var(--color-credit-light)] text-[var(--color-${category})]">${expense[1]}</span></td>
-                <td class="px-3 text-right font-mono tabular text-[var(--color-ink-soft)]">${debit}</td>
+                <td class="px-3 text-right font-mono tabular text-[var(--color-debit)]">${debit}</td>
                 <td class="px-3 text-right font-mono tabular text-[var(--color-credit)]">${credit}</td>
                 <td class="px-5 lg:px-6 text-right font-mono tabular">${balanceForRow}</td>
             </tr>
