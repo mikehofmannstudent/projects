@@ -60,8 +60,8 @@ function handleTable(option) {
         const formattedDate = `${monthNames[Number(month) - 1]} ${Number(day)} ${year}`
 
         const category = expense[1] === "Credit" ? "credit" : "debit";
-        const credit = expense[1] === "Credit" ? expense[3] : "—";
-        const debit = expense[1] === "Debit" ? expense[3] : "—";
+        const credit = expense[1] === "Credit" ? expense[3].toFixed(2) : "—";
+        const debit = expense[1] === "Debit" ? expense[3].toFixed(2) : "—";
 
         const balanceForRow = runningBalance.toFixed(2);
 

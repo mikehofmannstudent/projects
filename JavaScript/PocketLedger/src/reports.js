@@ -103,7 +103,7 @@ function handleCategorySummary(year, months) {
             <li>
                 <div class="flex justify-between text-sm mb-1.5">
                     <span>${expense[1][0]}</span>
-                    <span class="font-mono tabular">SG$${expense[1][1]}</span>
+                    <span class="font-mono tabular">SG$${expense[1][1].toFixed(2)}</span>
                 </div>
                 <div class="h-2 rounded-full bg-[var(--color-sage)] overflow-hidden">
                     <div class="h-full bg-[var(--color-brand)] rounded-full" style="width: ${barWidth}%"></div>
@@ -173,11 +173,11 @@ function handleSummary(year, months) {
     let html = `
         <div class="flex justify-between py-2 border-b border-[var(--color-paper-rule)]">
             <dt class="text-sm text-[var(--color-ink-soft)]">Total income</dt>
-            <dd class="font-mono tabular text-sm text-[var(--color-credit)]">SG$${totalIncome}</dd>
+            <dd class="font-mono tabular text-sm text-[var(--color-credit)]">SG$${totalIncome.toFixed(2)}</dd>
         </div>
         <div class="flex justify-between py-2 border-b border-[var(--color-paper-rule)]">
             <dt class="text-sm text-[var(--color-ink-soft)]">Total expenses</dt>
-            <dd class="font-mono tabular text-sm text-[var(--color-debit)]">SG$${totalExpense}</dd>
+            <dd class="font-mono tabular text-sm text-[var(--color-debit)]">SG$${totalExpense.toFixed(2)}</dd>
         </div>
         <div class="flex justify-between py-2 border-b border-[var(--color-paper-rule)]">
             <dt class="text-sm text-[var(--color-ink-soft)]">Net profit</dt>
