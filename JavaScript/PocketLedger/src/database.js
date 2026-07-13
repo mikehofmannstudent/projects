@@ -1,3 +1,4 @@
+
 let db;
 
 async function initDatabase() {
@@ -17,7 +18,7 @@ async function initDatabase() {
             CREATE TABLE expenses(
                 id INTEGER PRIMARY KEY,
                 type TEXT,
-                date TEXT,
+                dateTime TEXT,
                 amount REAL,
                 description TEXT,
                 category TEXT,
@@ -37,14 +38,14 @@ function saveDatabase() {
     );
 }
 
-function addExpense(type, date, amount, description, category, notes) {
+function addExpense(type, dateTime, amount, description, category, notes) {
     db.run(`
         INSERT INTO expenses
-        (type, date, amount, description, category, notes)
+        (type, dateTime, amount, description, category, notes)
 
         VALUES
         (?, ?, ?, ?, ?, ?)
-    `, [type, date, amount, description, category, notes]);
+    `, [type, dateTime, amount, description, category, notes]);
 
     saveDatabase();
 }
@@ -73,42 +74,47 @@ function getOccurredExpenses(sortOption, order, limit) {
     return db.exec(`
         SELECT *
         FROM expenses
-        WHERE date <= date('now')
+        WHERE dateTime <= ?
         ORDER BY ${sortOption} ${order}
         LIMIT ${limit};
-    `);
+    `, [new Date().toISOString()]);
 }
 
 function getOccurredExpensesAfterDate(sortOption, order, limit, yearMonthDay) {
+    const start = `${yearMonthDay}T00:00:00.000Z`;
+    const end = new Date().toISOString();
+
     return db.exec(`
         SELECT *
         FROM expenses
-        WHERE date <= date('now')
-        AND date >= ?
+        WHERE dateTime >= ?
+        AND dateTime <= ?
         ORDER BY ${sortOption} ${order}
         LIMIT ${limit};
-    `, [yearMonthDay]);
+    `, [start, end]);
 }
 
 function getUpcomingExpenses(sortOption, order, limit) {
     return db.exec(`
         SELECT *
         FROM expenses
-        WHERE date > date('now')
+        WHERE dateTime > ?
         ORDER BY ${sortOption} ${order}
         LIMIT ${limit};
-    `);
+    `, [new Date().toISOString()]);
 }
 
 function getMonthExpenses(type, year, month) {
-    const yearMonth = `${year}-${String(month).padStart(2, "0")}`;
+    const start = `${year}-${String(month).padStart(2, "0")}-01T00:00:00.000Z`;
+    const end = `${year}-${String(month + 1).padStart(2, "0")}-01T00:00:00.000Z`;
 
     return db.exec(`
         SELECT *
         FROM expenses
         WHERE type = ?
-        AND strftime('%Y-%m', date) = ?
-    `, [type, yearMonth]);
+        AND dateTime >= ?
+        AND dateTime < ?
+    `, [type, start, end]);
 }
 
 function deleteExpense(id) {
@@ -146,23 +152,26 @@ function totalAmount(type) {
 }
 
 function upcomingAmount(type) {
+    const currYearMonthDay = new Date().toISOString();
+
     return db.exec(`
         SELECT COALESCE(SUM(amount), 0)
         FROM expenses
         WHERE type = ?
-        AND date > date('now')
-    `, [type]);
+        AND dateTime > ?
+    `, [type, currYearMonthDay]);
 }
 
 function amountInMonth(type, year, month) {
-    const yearMonth = `${year}-${String(month).padStart(2, "0")}`;
-
+    const start = new Date(Date.UTC(year, month - 1, 1)).toISOString();
+    const end = new Date(Date.UTC(year, month, 1)).toISOString();
     return db.exec(`
         SELECT COALESCE(SUM(amount), 0)
         FROM expenses
         WHERE type = ?
-        AND strftime('%Y-%m', date) = ?
-    `, [type, yearMonth]);
+        AND dateTime >= ?
+        AND dateTime < ?
+    `, [type, start, end]);
 }
 
 function EntriesThisMonth(type) {
@@ -170,16 +179,19 @@ function EntriesThisMonth(type) {
         SELECT COALESCE(COUNT(*), 0)
         FROM expenses
         WHERE type = ?
-        AND strftime('%Y-%m', date) = strftime('%Y-%m', 'now'); 
+        AND strftime('%Y-%m', dateTime) = strftime('%Y-%m', 'now'); 
     `, [type]);
 }
 
 function countEntries(startDate, endDate) {
+    const start = `${startDate}T00:00:00.000Z`;
+    const end = `${endDate}T23:59:59.999Z`;
+
     return db.exec(`
         SELECT COALESCE(COUNT(*), 0)
         FROM expenses
-        WHERE date BETWEEN ? AND ?;
-    `, [startDate, endDate])
+        WHERE dateTime BETWEEN ? AND ?;
+    `, [start, end]);
 }
 
 function getCategories() {
@@ -192,6 +204,8 @@ function getCategories() {
 
 function deleteCategory(category) {
     db.run(
-        `DELETE FROM expenses WHERE category = ?`
-    ), [category];
+        `DELETE FROM expenses WHERE category = ?
+    `, [category]);
+
+    saveDatabase();
 }

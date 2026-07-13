@@ -6,7 +6,7 @@ const ago30Day = ago30Days.getDate();
 const currentDay = today.getDate();
 const currentMonth = today.getMonth() + 1;
 const currentYear = today.getFullYear();
-const currentQuarterNum = Math.floor(currentMonth / 3) + 1;
+const currentQuarterNum = Math.floor((currentMonth - 1)/ 3) + 1;
 
 const monthNames = [
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -25,11 +25,9 @@ function handleTable(option) {
 
     switch (option) {
         case "display30Day":
-            yearMonthDay = currentMonth === 1
-                ? `${currentYear}-12-${String(ago30Day).padStart(2, "0")}`
-                : `${currentYear}-${String(currentMonth - 1).padStart(2, "0")}-${String(ago30Day).padStart(2, "0")}`;
+            yearMonthDay = ago30Days.toISOString().slice(0, 10);
 
-            results = getOccurredExpensesAfterDate("date", "DESC", "1000", yearMonthDay);
+            results = getOccurredExpensesAfterDate("dateTime", "DESC", "1000", yearMonthDay);
 
             break;
 
@@ -37,17 +35,17 @@ function handleTable(option) {
             const firstMonth = (currentQuarterNum - 1) * 3 + 1;
             yearMonthDay = `${currentYear}-${String(firstMonth).padStart(2, "0")}-01`;
 
-            results = getOccurredExpensesAfterDate("date", "DESC", "1000", yearMonthDay);
+            results = getOccurredExpensesAfterDate("dateTime", "DESC", "1000", yearMonthDay);
             break;
 
         case "displayYear":
             yearMonthDay = `${currentYear}-01-01`
 
-            results = getOccurredExpensesAfterDate("date", "DESC", "1000", yearMonthDay);
+            results = getOccurredExpensesAfterDate("dateTime", "DESC", "1000", yearMonthDay);
             break;
 
         case "displayAll":
-            results = getOccurredExpenses("date", "DESC", "1000");
+            results = getAllExpenses("dateTime", "DESC", "1000");
             break;
     }
 
@@ -56,8 +54,8 @@ function handleTable(option) {
     }
 
     results[0].values.forEach(expense => {
-        const [year, month, day] = expense[2].split("-");
-        const formattedDate = `${monthNames[Number(month) - 1]} ${Number(day)} ${year}`
+        const date = new Date(expense[2])
+        const formattedDate = `${monthNames[Number(date.getMonth())]} ${date.getDate()}, ${date.getFullYear()}`
 
         const category = expense[1] === "Credit" ? "credit" : "debit";
         const credit = expense[1] === "Credit" ? expense[3].toFixed(2) : "—";
@@ -69,7 +67,7 @@ function handleTable(option) {
             <tr data-id="${expense[0]}" class="border-b border-[var(--color-sage-line)] hover:bg-[var(--color-sage)]/40 transition-colors">
                 <td class="px-5 lg:px-6 h-11 pl-[3.75rem] whitespace-nowrap text-[var(--color-ink-soft)]">${formattedDate}</td>
                 <td class="px-3 font-medium">${expense[4]}</td>
-                <td class="px-3"><span class="inline-block px-2 py-0.5 rounded text-xs bg-[var(--color-credit-light)] text-[var(--color-${category})]">${expense[1]}</span></td>
+                <td class="px-3 pt-1 text-[var(--color-ink-soft)]">${expense[5]}</td>
                 <td class="px-3 text-right font-mono tabular text-[var(--color-debit)]">${debit}</td>
                 <td class="px-3 text-right font-mono tabular text-[var(--color-credit)]">${credit}</td>
                 <td class="px-5 lg:px-6 text-right font-mono tabular">${balanceForRow}</td>
@@ -113,8 +111,8 @@ function loadTableFooter(option) {
             break;
 
         case "displayAll":
-            const firstEntry = getOccurredExpenses("date", "DESC", "1");
-            const lastEntry = getOccurredExpenses("date", "ASC", "1");
+            const firstEntry = getOccurredExpenses("dateTime", "DESC", "1");
+            const lastEntry = getOccurredExpenses("dateTime", "ASC", "1");
 
             startDate = lastEntry[0].values[0][2];
             endDate = firstEntry[0].values[0][2];
@@ -158,8 +156,10 @@ function openExpenseModal(id) {
 
     const expense = result[0].values[0];
 
+    const date = new Date(expense[2]);
+
     document.getElementById("modalType").textContent = expense[1];
-    document.getElementById("modalDate").textContent = expense[2];
+    document.getElementById("modalDate").textContent = date.toLocaleString();;
     document.getElementById("modalAmount").textContent = expense[3];
     document.getElementById("modalDescription").textContent = expense[4];
     document.getElementById("modalCategory").textContent = expense[5];
@@ -170,7 +170,7 @@ function openExpenseModal(id) {
     modal.classList.add("flex");
 }
 
-function loadReportPage() {
+function loadTransactionPage() {
     const period = document.getElementById("displayPeriod")
     
     // Load 30 day ledger table
@@ -230,7 +230,7 @@ function loadReportPage() {
 async function main() {
     await initDatabase();
 
-    loadReportPage();
+    loadTransactionPage();
 }
 
 main();

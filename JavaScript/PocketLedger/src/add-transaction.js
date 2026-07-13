@@ -103,7 +103,6 @@ function validateInput() {
 }
 
 function saveEntry() {
-
     if (!validateInput()) {
         return;
     }
@@ -112,8 +111,14 @@ function saveEntry() {
 
     const date = document.getElementById("date").value;
     const [day, month, year] = date.split("/");
-    const sqlDate = `${year}-${month}-${day}`;
+    const today = new Date();
 
+    today.setFullYear(Number(year));
+    today.setMonth(Number(month) - 1);
+    today.setDate(Number(day));
+
+    const dateTime = today.toISOString();
+    
     const amount = parseFloat(document.getElementById("amount").value);
 
     const description = document.getElementById("description").value.trim();
@@ -122,10 +127,10 @@ function saveEntry() {
 
     const notes = document.getElementById("notes").value.trim();
 
-    addExpense(type, sqlDate, amount, description, category, notes);
+    addExpense(type, dateTime, amount, description, category, notes);
 
     window.location.href = "transactions.html";
-}``
+}
 
 function loadCategories() {
     const container = document.getElementById("category");
@@ -134,13 +139,13 @@ function loadCategories() {
 
     const results = getCategories();
 
-    results[0].values.forEach(([category]) => {
-        container.innerHTML += `
-            <option>${category}</option>
-        `
-    });
-
-    container.innerHTML += `<option>Other</option>`
+    if (results.length) {
+        results[0].values.forEach(([category]) => {
+            container.innerHTML += `
+                <option>${category}</option>
+            `
+        });
+    }
 }
 
 function attachDeleteEvents() {
@@ -157,11 +162,10 @@ function attachDeleteEvents() {
                 "This action cannot be undone."
             )) return;
 
-            deleteCategory();
+            deleteCategory(category);
 
             loadDelCategories();
-
-            loadCategoryDropdown();
+            loadCategories();
         });
     });
 }

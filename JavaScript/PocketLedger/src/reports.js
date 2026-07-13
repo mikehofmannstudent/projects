@@ -106,7 +106,7 @@ function handleCategorySummary(year, months) {
                     <span class="font-mono tabular">SG$${expense[1][1].toFixed(2)}</span>
                 </div>
                 <div class="h-2 rounded-full bg-[var(--color-sage)] overflow-hidden">
-                    <div class="h-full bg-[var(--color-brand)] rounded-full" style="width: ${barWidth}%"></div>
+                    <div class="h-full bg-[var(--color-debit)] rounded-full" style="width: ${barWidth}%"></div>
                 </div>
             </li>
         `;

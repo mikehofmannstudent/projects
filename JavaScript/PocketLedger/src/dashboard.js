@@ -4,6 +4,13 @@ const today = new Date();
 const thisYear = today.getFullYear();
 const thisMonth = today.getMonth() + 1;
 
+const weekday = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
+const monthNames = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
+
 const options = {
     weekday: "long",
     month: "long",
@@ -15,16 +22,13 @@ currentDate.textContent = `${today.toLocaleDateString(undefined, options)}`
 function loadComparison() {
     const compareNetBalance = document.getElementById("compareNetBalance");
 
-    
-
-    const currentBalance = totalAmount("Credit")[0].values[0][0] - totalAmount("Debit")[0].values[0][0];
     const thisMonthBalance = amountInMonth("Credit", thisYear, thisMonth)[0].values[0][0] - amountInMonth("Debit", thisYear, thisMonth)[0].values[0][0];
-    const previousBalance = currentBalance - thisMonthBalance;
+    const lastMonthBalance = amountInMonth("Credit", thisYear, thisMonth - 1)[0].values[0][0] - amountInMonth("Debit", thisYear, thisMonth - 1)[0].values[0][0];
 
     let comparison = 0;
     
-    if (previousBalance !== 0) {
-        comparison = ((currentBalance - previousBalance) / Math.abs(previousBalance)) * 100;
+    if (lastMonthBalance !== 0) {
+        comparison = ((thisMonthBalance - lastMonthBalance) / Math.abs(lastMonthBalance)) * 100;
     }
 
     compareNetBalance.textContent = `${comparison.toFixed(1)}% vs last month`;
@@ -53,7 +57,7 @@ function loadComparison() {
 function loadEntriesTable() {
     const table = document.getElementById("recentEntriesTable");
 
-    const result = getOccurredExpenses("date", "DESC", "5");
+    const result = getOccurredExpenses("dateTime", "DESC", "5");
 
     const rows = result[0].values;
 
@@ -64,7 +68,7 @@ function loadEntriesTable() {
     table.innerHTML = "";
 
     rows.forEach(row => {
-        const [id, type, date, amount, description, category, notes] = row;
+        const [id, type, dateTime, amount, description, category, notes] = row;
         
         const balanceForRow = runningBalance.toFixed(2);
         
@@ -76,10 +80,13 @@ function loadEntriesTable() {
             ? amount.toFixed(2)
             : "—";
 
+        const date = new Date(dateTime);
+        const entryDate = `${weekday[date.getDay()]}, ${date.getDate()} ${monthNames[date.getMonth()]}`
+
         table.innerHTML += `
             <tr class="border-t border-[var(--color-paper-rule)]">
                 <td class="px-5 lg:px-6 pt-1 h-11 pl-[3.75rem] whitespace-nowrap text-[var(--color-ink-soft)]">
-                    ${date}
+                    ${entryDate}
                 </td>
 
                 <td class="px-3 pt-1 font-medium">
@@ -111,7 +118,7 @@ function loadEntriesTable() {
 function loadUpcomingList() {
     const upcomingList = document.getElementById("upcomingList");
 
-    const result = getUpcomingExpenses("date", "DESC", "5");
+    const result = getUpcomingExpenses("dateTime", "DESC", "5");
 
     if (result.length === 0) {
         upcomingList.innerHTML = `
@@ -127,7 +134,10 @@ function loadUpcomingList() {
     let html = "";
 
     rows.forEach(row => {
-        const [id, type, date, amount, description, category, notes] = row;
+        const [id, type, dateTime, amount, description, category, notes] = row;
+
+        const date = new Date(dateTime);
+        const entryDate = `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
 
         const color = type === "Credit"
             ? "text-[var(--color-credit)]"
@@ -137,7 +147,7 @@ function loadUpcomingList() {
             <li class="flex items-center justify-between py-2.5">
                 <div>
                     <p class="text-sm font-medium">${description}</p>
-                    <p class="text-xs text-[var(--color-ink-soft)]">${date}</p>
+                    <p class="text-xs text-[var(--color-ink-soft)]">${entryDate}</p>
                 </div>
                 <span class="font-mono tabular text-sm ${color}">SG$${amount}</span>
             </li>
@@ -150,8 +160,8 @@ function loadUpcomingList() {
 function loadDashboard() {
     // Load net balance
     const netBalance = document.getElementById("netBalance");
-
-    const balance = totalAmount("Credit")[0].values[0][0] - totalAmount("Debit")[0].values[0][0];
+    const balance = totalAmount("Credit")[0].values[0][0] - totalAmount("Debit")[0].values[0][0] 
+                    + upcomingAmount("Debit")[0].values[0][0] - upcomingAmount("Credit")[0].values[0][0];
 
     netBalance.textContent = `SG$${balance.toFixed(2)}`;
     
