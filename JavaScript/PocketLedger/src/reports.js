@@ -45,7 +45,7 @@ function handleChart(year, months, monthNames) {
         
         const creditHeight = max === 0 ? 0 : credit / max * 100;
         const debitHeight = max === 0 ? 0 : debit / max * 100;
-
+        
         html += `
             <div class="flex-1 flex flex-col items-center gap-2">
                 <div class="w-full flex items-end gap-1.5 h-94">

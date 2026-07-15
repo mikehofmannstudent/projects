@@ -92,7 +92,7 @@
         <div class="ledger-sheet">
           <table class="w-full text-sm">
             <thead>
-              <tr class="text-left text-[var(--color-ink-soft)]">
+              <tr class="text-left text-[var(--color-ink-soft)] border-b border-[var(--color-sage-line)]">
                 <th class="font-bold px-5 lg:px-6 pt-4 pb-2 pl-[3.75rem]">Date</th>
                 <th class="font-bold px-3 pt-4 pb-2">Description</th>
                 <th class="font-bold px-3 pt-4 pb-2">Category</th>
@@ -119,9 +119,40 @@
   </div>
 </div>
 
+<div
+    id="expenseModal"
+    class="fixed inset-0 hidden items-center justify-center bg-black/40 z-50"
+>
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-display text-lg font-semibold">
+                Transaction Details
+            </h2>
+
+            <button
+                id="deleteExpense"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
+            >
+                Delete
+            </button>
+            <button id="closeModal" class="text-4xl">&times;</button>
+        </div>
+
+        <div class="space-y-2 text-sm">
+            <p><strong>Date:</strong> <span id="modalDate"></span></p>
+            <p><strong>Type:</strong> <span id="modalType"></span></p>
+            <p><strong>Amount:</strong> <span id="modalAmount"></span></p>
+            <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+            <p><strong>Category:</strong> <span id="modalCategory"></span></p>
+            <p><strong>Notes:</strong> <span id="modalNotes"></span></p>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
     
 <script src="../src/database.js"></script>
+<script src="../src/table-interaction.js"></script>
 <script src="../src/dashboard.js"></script>
 
 </body>

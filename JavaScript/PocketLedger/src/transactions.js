@@ -125,67 +125,7 @@ function loadTableFooter(option) {
     footer.textContent = `Showing ${count} of ${totalCount} entries`
 }
 
-function refreshTable(period, ledger) {
-    switch (period.value) {
-        case "last30days":
-            ledger.innerHTML = handleTable("display30Day");
-            loadTableFooter("display30Day");
-            break;
-
-        case "thisQuarter":
-            ledger.innerHTML = handleTable("displayQuarter");
-            loadTableFooter("displayQuarter");
-            break;
-        
-        case "thisYear":
-            ledger.innerHTML = handleTable("displayYear");
-            loadTableFooter("displayYear");
-            break;
-
-        case "allTime":
-            ledger.innerHTML = handleTable("displayAll");
-            loadTableFooter("displayAll");
-            break;
-    }
-}
-
-function openExpenseModal(id) {
-    const result = getExpense(id);
-
-    if (!result.length) return;
-
-    const expense = result[0].values[0];
-
-    const date = new Date(expense[2]);
-
-    document.getElementById("modalType").textContent = expense[1];
-    document.getElementById("modalDate").textContent = date.toLocaleString();;
-    document.getElementById("modalAmount").textContent = expense[3];
-    document.getElementById("modalDescription").textContent = expense[4];
-    document.getElementById("modalCategory").textContent = expense[5];
-    document.getElementById("modalNotes").textContent = expense[6];
-
-    const modal = document.getElementById("expenseModal");
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-}
-
-function loadTransactionPage() {
-    const period = document.getElementById("displayPeriod")
-    
-    // Load 30 day ledger table
-    const ledger = document.getElementById("ledgerTable");
-    ledger.innerHTML = handleTable("display30Day");
-
-    // Load ledger table footer
-    loadTableFooter("display30Day");
-
-    // Watch for period changes
-    period.addEventListener("change", () => {
-        refreshTable(period, ledger);
-    });
-
-    // Load modal
+function loadModal(period, ledger) {
     let selectedExpenseId = null;
 
     const modal = document.getElementById("expenseModal");
@@ -225,6 +165,49 @@ function loadTransactionPage() {
 
         refreshTable(period, ledger);
     };
+}
+
+function refreshTable(period, ledger) {
+    switch (period.value) {
+        case "last30days":
+            ledger.innerHTML = handleTable("display30Day");
+            loadTableFooter("display30Day");
+            break;
+
+        case "thisQuarter":
+            ledger.innerHTML = handleTable("displayQuarter");
+            loadTableFooter("displayQuarter");
+            break;
+        
+        case "thisYear":
+            ledger.innerHTML = handleTable("displayYear");
+            loadTableFooter("displayYear");
+            break;
+
+        case "allTime":
+            ledger.innerHTML = handleTable("displayAll");
+            loadTableFooter("displayAll");
+            break;
+    }
+}
+
+function loadTransactionPage() {
+    const period = document.getElementById("displayPeriod")
+    
+    // Load 30 day ledger table
+    const ledger = document.getElementById("ledgerTable");
+    ledger.innerHTML = handleTable("display30Day");
+
+    // Load ledger table footer
+    loadTableFooter("display30Day");
+
+    // Watch for period changes
+    period.addEventListener("change", () => {
+        refreshTable(period, ledger);
+    });
+
+    // Load modal
+    loadModal(period, ledger);
 }
 
 async function main() {

@@ -59,6 +59,11 @@ function loadEntriesTable() {
 
     const result = getOccurredExpenses("dateTime", "DESC", "5");
 
+    if (result[0] === undefined) {
+        table.innerHTML = "";
+        return;
+    }
+
     const rows = result[0].values;
 
     const currentBalance = totalAmount("Credit")[0].values[0][0] - totalAmount("Debit")[0].values[0][0]
@@ -84,7 +89,7 @@ function loadEntriesTable() {
         const entryDate = `${weekday[date.getDay()]}, ${date.getDate()} ${monthNames[date.getMonth()]}`
 
         table.innerHTML += `
-            <tr class="border-t border-[var(--color-paper-rule)]">
+            <tr data-id="${id}" class="border-b border-[var(--color-sage-line)] hover:bg-[var(--color-sage)]/40 transition-colors">
                 <td class="px-5 lg:px-6 pt-1 h-11 pl-[3.75rem] whitespace-nowrap text-[var(--color-ink-soft)]">
                     ${entryDate}
                 </td>
@@ -144,7 +149,7 @@ function loadUpcomingList() {
             : "text-[var(--color-debit)]"
 
         html += `
-            <li class="flex items-center justify-between py-2.5">
+            <li data-id="${id}" class="flex items-center justify-between py-2.5 border-b border-[var(--color-sage-line)] hover:bg-[var(--color-sage)]/40 transition-colors">
                 <div>
                     <p class="text-sm font-medium">${description}</p>
                     <p class="text-xs text-[var(--color-ink-soft)]">${entryDate}</p>
@@ -155,6 +160,58 @@ function loadUpcomingList() {
     });
 
     upcomingList.innerHTML = html;
+}
+
+function loadModal() {
+    let selectedExpenseId = null;
+
+    const modal = document.getElementById("expenseModal");
+    
+    document.getElementById("closeModal").onclick = () => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+    };
+
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            selectedExpenseId = null;
+
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+        }
+    };
+
+    document.getElementById("recentEntriesTable").addEventListener("click", (e) => {
+        const row = e.target.closest("tr");
+
+        if (!row) return;
+
+        selectedExpenseId = row.dataset.id;
+        openExpenseModal(row.dataset.id);
+    });
+
+    document.getElementById("upcomingList").addEventListener("click", (e) => {
+        const row = e.target.closest("li");
+
+        if (!row) return;
+
+        selectedExpenseId = row.dataset.id;
+        openExpenseModal(row.dataset.id);
+    });
+
+    document.getElementById("deleteExpense").onclick = () => {
+        if (selectedExpenseId === null) return;
+
+        if (!confirm("Delete this transaction?")) return;
+
+        deleteExpense(selectedExpenseId);
+
+        document.getElementById("expenseModal").classList.add("hidden");
+        document.getElementById("expenseModal").classList.remove("flex");
+
+        loadEntriesTable();
+        loadUpcomingList();
+    };
 }
 
 function loadDashboard() {
@@ -197,6 +254,9 @@ function loadDashboard() {
 
     // Load upcoming list
     loadUpcomingList();
+
+    // Load modal
+    loadModal();
 }
 
 
