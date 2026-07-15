@@ -48,7 +48,7 @@ function handleChart(year, months, monthNames) {
 
         html += `
             <div class="flex-1 flex flex-col items-center gap-2">
-                <div class="w-full flex items-end gap-1.5 h-40">
+                <div class="w-full flex items-end gap-1.5 h-94">
                     <div class="flex-1 bg-[var(--color-credit)] rounded-t" style="height: ${creditHeight}%"></div>
                     <div class="flex-1 bg-[var(--color-debit)] rounded-t" style="height: ${debitHeight}%"></div>
                 </div>
