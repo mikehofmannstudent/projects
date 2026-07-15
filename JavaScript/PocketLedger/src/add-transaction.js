@@ -29,28 +29,6 @@ category.addEventListener("change", () => {
     }
 });
 
-input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-
-        const value = input.value.trim();
-        if (!value) return;
-
-        // Create a new option
-        const option = new Option(value, value);
-
-        // Add it after "Create new category"
-        category.insertBefore(option, category.lastElementChild);
-
-        // Select the new option
-        category.value = value;
-
-        // Hide and clear the input
-        input.value = "";
-        container.classList.add("hidden");
-    }
-});
-
 const form = document.getElementById("entryForm");
 
 form.addEventListener("submit", (e) => {
@@ -73,6 +51,7 @@ function validateInput() {
     const amount = document.getElementById("amount").value.trim();
     const description = document.getElementById("description").value.trim();
     const category = document.getElementById("category").value;
+    const newCategory = document.getElementById("newCategoryInput").value.trim();
 
     if (!date) {
         alert("Please select a date.");
@@ -94,8 +73,8 @@ function validateInput() {
         return false;
     }
 
-    if (category === "other") {
-        alert("Please create a new category first.");
+    if (category === "other" && !newCategory) {
+        alert("Please enter a new category.");
         return false;
     }
 
@@ -123,7 +102,11 @@ function saveEntry() {
 
     const description = document.getElementById("description").value.trim();
 
-    const category = document.getElementById("category").value;
+    let category = document.getElementById("category").value;
+    console.log(category )
+    if (category === "other") {
+        category = document.getElementById("newCategoryInput").value
+    }
 
     const notes = document.getElementById("notes").value.trim();
 
@@ -221,8 +204,6 @@ function loadNewEntryPage() {
     loadCategories()
 
     loadDelCategories();
-
-
 }
 
 async function main() {
